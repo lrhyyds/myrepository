@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nb.yyds220118.dao.IAdmincommentDao">
+    <!--关联查询回复内容和用户名字-->
+    <resultMap id="getcomrepy" type="comments">
+        <result property="cId" column="cid"></result>
+        <association property="commentReply" column="cid" select="getComrepBycid"></association>
+        <association property="uName" column="uno" select="getunameByuno"></association>
+    </resultMap>
+    <select id="getcommentsBystatus" resultMap="getcomrepy">
+        select * from comments where 1=1
+        <if test="replystatus!=0">
+          and  replystatus=#{replystatus}
+        </if>
+    </select>
+    <!--关联回复表查询回复内容-->
+    <select id="getComrepBycid" resultType="commentReply">
+         select * from commentreply where cid=#{cId}
+    </select>
+    <!--关联用户表查询用户名-->
+    <select id="getunameByuno" resultType="String">
+        select uname from users where uno=#{uno}
+    </select>
+
+    <!--修改留言内容-->
+      <update id="updatecomstatus">
+          update comments set replystatus=#{replystatus} where cid=#{cId}
+      </update>
+</mapper>

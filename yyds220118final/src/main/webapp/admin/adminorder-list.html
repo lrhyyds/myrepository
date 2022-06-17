@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.2</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8"/>
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/xadmin.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/xadmin.js"></script>
+    <script src="../js/jquery3.3.1.min.js"></script>
+    <script src="../js/vue3.js"></script>
+    <script src="../vue/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a href="">演示</a>
+                <a>
+                    <cite>导航元素</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div id="container" class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+
+                    <form class="layui-form layui-col-space5">
+                            <div class="layui-input-inline layui-show-xs-block">
+                                <input type="text" class="layui-input" id="test25" placeholder="开始日">
+                            </div>
+                        <div class="layui-input-inline layui-show-xs-block">
+                            <input type="text" class="layui-input" id="test26" placeholder="截止日">
+                        </div>
+                        <div class="layui-input-inline layui-show-xs-block">
+                            <select id="contrller">
+                                <option value="0">订单状态</option>
+                                <option value="4">所有订单</option>
+                                <option value="1">未发货</option>
+                                <option value="2">已发货</option>
+                                <option value="3">已取消</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline ">
+                            <button class="layui-btn" type="button"  @click="getorderBydate()">
+                                <i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                        <div class="layui-input-inline ">
+                            <input id="inchange" v-model="changeinput" type="text" name="username"
+                                   placeholder="请输入订单编号查询" class="layui-input"></div>
+                    </form>
+                </div>
+                <!--开始导航功能条部分-->
+                <div class="layui-card-header">
+                    <button class="layui-btn layui-btn-danger" onclick="delallnews()">
+                        <i class="layui-icon"></i>批量删除
+                    </button>
+                    <button class="layui-btn" onclick="window.location.reload()">
+                        <i class="layui-icon"></i>未发货
+                    </button>
+                    <button class="layui-btn" @click="deliveried()">
+                        <i class="layui-icon"></i>已发货
+                    </button>
+                    <button class="layui-btn" @click="backorder()">
+                        <i class="layui-icon"></i>退单信息
+                    </button>
+                </div>
+                <!--结束导航功能条部分-->
+                <!--开始未发货表格页面-->
+                <div class="layui-card-body ">
+                    <table class="layui-table" lay-filter="test1">
+                        <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox"  id="aagroup" lay-skin="primary">
+                            </th>
+                            <th>序号</th>
+                            <th>订单编号</th>
+                            <th>用户编号</th>
+                            <th>收货人手机号</th>
+                            <th>收货人姓名</th>
+                            <th>收货人地址</th>
+                            <th>创建日期</th>
+                            <th>订单金额</th>
+                            <th>订单状态</th>
+
+                        </thead>
+                        <tbody>
+                        <tr v-for="(t,index) in orders">
+                            <td><input type="checkbox" class="cb" :value="t.oid" name="aasigle" lay-skin="primary">
+                            </td>
+                            <td>{{(cpage-1)*10+index+1}}</td>
+                            <td>{{t.oid}}</td>
+                            <td>{{t.uno}}</td>
+                            <td>{{t.ophone}}</td>
+                            <td>{{t.oname}}</td>
+                            <td>{{t.oaddress}}</td>
+                            <td>{{t.ocreatTime}}</td>
+                            <td>{{t.ocost}}</td>
+                            <td>
+                                    <span v-if="t.ostatus==1">未发货</span>
+                                    <span v-if="t.ostatus==2">已发货</span>
+                                    <span v-if="t.ostatus==3">已退单</span>
+                                </td>
+                            <!--这种定义全局变量适用于得到遍历的数据状态统一的情况，如果不统一则会按最后一个赋给的值显示，
+                            如果最后一个给的值是已发货，全局变量最终的值是已发货，则前端显示全部都是已发货
+                            要实现的效果： 判断status==1 -> shipstatus="未发货"
+                                              status==2 -> shipstatus="已发货"
+                                              status==3 -> shipstatus="已退单"
+                                          -->
+                            <td class="td-manage">
+                                <a title="查看" onclick="xadmin.open('编辑','order-view.html')" href="javascript:;">
+                                    <i class="layui-icon">&#xe63c;</i></a>
+                                <a title="删除" @click="del(t.id)" href="javascript:;">
+                                    <i class="layui-icon">&#xe640;</i></a>
+                                <div name="statusDiv" v-if="t.ostatus==1">
+                                    <button name="status" class="layui-btn" @click="delivery(t.oid)">
+                                        <i class="layui-icon"></i>发货
+                                    </button>
+                                </div>
+                                <div name="statusDiv" v-if="t.ostatus==2">
+                                    <button name="status" class="layui-btn" @click="showlogInfo(t.oid)">
+                                        <i class="layui-icon"></i>查看物流
+                                    </button>
+                                </div>
+                            </td>
+                            </p>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!--结束未发货表格页面-->
+
+                <!--开始切换上下页代码块-->
+                <div class="layui-card-body ">
+                    <div class="page">
+                        <div>
+                            <a @click="go(1)">首页</a>
+                            <a @click="go(2)" href="javascript:">上一页</a>
+                            <a @click="go(3)" href="javascript:">下一页</a>
+                            <a @click="go(4)" href="javascript:">末页</a>
+                            <a class="num" href="javascipt:">{{cpage}}/{{tpage}}</a>
+                        </div>
+                    </div>
+                </div>
+                <!--结束切换上下页代码-->
+            </div>
+        </div>
+    </div>
+    <!--开始增加角色功能-->
+    <div id="logisticsform" style="display:none;width:400px;height:400px;">
+        <form class="layui-form" style="width:400px;" id="logiform">
+            <div class="layui-form-item">
+                <label class="layui-form-label">当前订单编号</label>
+                <div class="layui-input-block" id="ddbh">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">物流公司</label>
+                <div class="layui-input-block" v-for="m in logtypes">
+                    <input type="radio" :value="m.logname" id="loginame" name="loginame" :title="m.logname"  class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="padding:0px;margin:0px;width:400px;">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                </div>
+            </div>
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" type="button" @click="addlogi()">
+                确认发货
+            </button>
+        </form>
+    </div>
+    <!--结束增加角色功能-->
+    <!--开始展示物流信息-->
+    <div id="logiformInfo" style="display:none;width:400px;height:300px;">
+    <form class="layui-form" v-for="mm in logistics" style="margin-top: 40px;">
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <span  style="width: 200px; font-size: 20px;">收货人: {{mm.oname}}</span>
+        </div>
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <span  style="width: 200px; font-size: 20px;">物流单号: {{mm.loginum}}</span>
+        </div>
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <span  style="width: 200px; font-size: 20px;">物流公司:{{mm.loginame}}
+                </span>
+        </div>
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <span  style="width: 200px; font-size: 20px;">发货时间:{{mm.logdate}}</span>
+        </div>
+    </form>
+    </div>
+    <!--结束展示物流信息-->
+</div>
+<!--container结束-->
+</body>
+
+<!--实现批量删除-->
+<script>
+    function delallnews(){
+        confirm("确认删除选中的订单吗？")
+        var inp=$(".cb");
+        var inpvaule=new Array();//定义一个变量存放被选数据的id
+        for (var i = 0; i <inp.length ; i++) {
+            if($(inp[i]).prop("checked")==true){//如果被选中
+                inpvaule.push(inp[i].value);
+                //$(inp[i]).prop("checked",this.checked);
+                console.log(inp[i]);
+            }
+        }
+        console.log(inpvaule);
+        $.post(//发送请求，批量删除
+            "/delbatchorders",
+            {"inpvaule":inpvaule},
+            function (res) {
+                if(res!=0){
+                    layer.msg("删除成功");
+                    window.location.reload();
+                }
+            }
+        )
+    }
+</script>
+<!--结束实现批量删除-->
+<!--开始实现全选功能js部分-->
+<script type="text/javascript">
+    window.onload = function () {
+        var btn = document.getElementById("aagroup");//实现全选的按钮
+        btn.onclick = function () {
+            var flag = this.checked;
+            var items = document.getElementsByName("aasigle");
+            for (var i = 0; i < items.length; i++) {
+                items[i].checked = flag;//将所有item的状态设为全选按钮的状态
+            }
+        }
+        var items = document.getElementsByName("aasigle");
+        for (var i = 0; i < items.length; i++) {
+            items[i].onclick = function () {//对每个item设置点击
+                var number = 0;//记录选中的个数
+                for (var j = 0; j < items.length; j++) {
+                    if (items[j].checked) {
+                        number++;
+                    }
+                }
+                document.getElementById("aagroup").checked = (items.length == number);
+            }
+        }
+    }
+</script>
+<!--结束实现全选功能js部分-->
+
+<script>
+    /*
+* 订单相关信息vue代码块
+* */
+const app = {
+    //vue中定义变量的地方
+    data() {
+        console.log("订单数据加载事件")
+        return {
+            changeinput: '',
+            valueinput: null,
+            pageInfo: null,
+            orders: null,//订单信息
+            cpage: null,
+            tpage: null,
+            v: null,
+            status: null,
+            globalstartdate:null,//开始时间范围
+            globalenddate:null,//截止时间范围
+            logtypes:null,//物流类型
+            logistics:null
+
+        }
+    },
+    //监听事件
+    watch: {
+        // 每当改变时，此功能将运行
+        changeinput(newchangeinput, oldchangeinput) {
+            console.log("new的值" + newchangeinput.value);
+            console.log("oid的值" + oldchangeinput.value);
+            if (newchangeinput.length != oldchangeinput.length || newchangeinput.value != oldchangeinput.value) {
+                this.getAnswer()
+            }
+
+        }
+    },
+    //定义方法
+    methods: {
+        getAnswer() {
+            var _self = this;
+            console.log("有变化");
+            var valueinput = document.getElementById("inchange").value;
+            console.log(_self.valueinput);
+            console.log("触发模糊查询globalstartdate:"+_self.globalstartdate+" "+
+                          "globalenddate:"+_self.globalenddate);
+            $.post(
+                "/getorderBydate",
+                {"page": _self.page,
+                    "status": _self.status==0?1:_self.status,
+                    "vauleinput": valueinput,
+                    "startdate":_self.globalstartdate,
+                    "enddate":_self.globalenddate},
+                function (res) {
+                    _self.pageInfo = res;
+                    _self.orders = res.list;
+                    _self.cpage = res.pageNum;
+                    _self.tpage = res.pages;
+                    console.log("监听时间查询的响应订单:"+_self.orders );
+                }
+            );
+        },
+        //根据时间范围查询
+        getorderBydate(){
+            console.log("getorderBydate");
+            var _self=this;
+           var startdate=document.getElementById("test25").value;
+           _self.globalstartdate=startdate;//定义全局的开始时间
+           console.log("时间范围查询开始的日期statdate："+startdate);
+           var enddate=document.getElementById("test26").value;
+           _self.globalenddate=enddate;//定义全局的截止时间
+           console.log("时间范围查询截止的日期enddate:"+enddate);
+           var selectstatus=document.getElementById("contrller").value;
+           console.log("选择的状态为："+selectstatus);
+           console.log("当前页为：page"+_self.cpage);
+           if(selectstatus!=0){
+               _self.status=selectstatus;
+           }else{
+               _self.status=1;
+           }
+           /*每一次状态修改都会改变全局状态的值，全局变量的状态便于多选择查询，以及翻页，
+           * 选择订单状态为0时，默认查未发货，则全局状态设置成1，请求状态参数设置为1
+           * 以保证翻页在当前状态下（翻页是根据全局状态的值请求翻页数据的），*/
+           console.log("当前订单状态为："+_self.status)
+         //固定在当前订单状态
+           $.post(
+               "/getorderBydate",
+               {"page":_self.cpage,"status":selectstatus==0?1:selectstatus,"startdate":startdate,"enddate":enddate},
+               function (res) {
+                   if (res == null) {
+                       confirm("查无当前日期范围的订单！");
+                       window.location.reload();
+                   } else {
+                       _self.pageInfo = res;
+                       _self.orders = res.list;
+                       _self.cpage = res.pageNum;
+                       _self.tpage = res.pages;
+                   console.log("时间范围响应的订单内容："+_self.orders);
+
+                   }
+               }
+           )
+        },
+        //弹出物流管理
+        delivery(id) {
+            oid = id;//将订单id传给弹窗页面 disabled ='disabled'
+            var html = "<input name='oId'  class='layui-input' value=" + oid + " type='hidden'>";
+            html += "<input name='disabled' disabled='disabled'  class='layui-input' value=" + oid + " >";
+            $("#ddbh").html(html);
+            console.log("弹窗页面的id" + oid)
+            layer.open({
+                type: 1,
+                content: $("#logisticsform"),
+                area: ['400px', '450px']
+            })
+        },
+        //增加物流
+        addlogi() {
+            v = document.getElementById("loginame").value;
+            console.log("v" + v);
+            if (v != "") {
+                console.log("物流信息无误");
+                $.post(
+                    "/addLogistics",
+                    $("#logiform").serialize(),
+                    function (res) {
+                        if (res == 1) {
+                            layer.close(layer.index);
+                            layer.msg("发货成功");
+                            window.location.reload();
+                        } else {
+                            layer.msg("发货失败！未知错误");
+                        }
+
+                    }
+                )
+                return false;
+            } else {
+                layer.msg("物流不能为空");
+                return
+            }
+        },
+        //查询已发货订单
+        deliveried() {
+            var _self = this;
+            _self.globalstartdate=null;//重置全局开始时间，避免翻页带入时间
+            _self.globalenddate=null;//重置全局结束时间，避免翻页带入时间
+            $.post(
+                "/getorderBydate",
+                {"page": 1, "status": 2},
+                function (res) {
+                    if (res == null) {
+                        layer.msg("当前无已发货订单");
+                    } else {
+                        _self.pageInfo = res;
+                        _self.orders = res.list;
+                        _self.cpage = res.pageNum;
+                        _self.tpage = res.pages;
+                        _self.status = 2;
+                        console.log("已发货响应的订单内容："+_self.orders);
+
+                    }
+                }
+            );
+        },
+        /*
+        *查询物流信息
+        * */
+        showlogInfo(oid) {
+            var _self=this;
+               $.post(
+                   "/getlogInfo",
+                   {"oId":oid},
+                   function (res) {
+                         _self.logistics=res;
+                         if(_self.logistics!=null){
+                             layer.open({
+                                 type:1,
+                                 content: $("#logiformInfo"),
+                                 area:['420px','420px']
+                             })
+                         }else {
+                             layer.msg("查询出错，未知异常");
+                         }
+                   }
+               )
+
+            layer.msg("已发货");
+        },
+        //退单信息
+        backorder() {
+            var _self = this;
+            _self.globalstartdate=null;//重置全局开始时间，避免翻页带入时间
+            _self.globalenddate=null;//重置全局结束时间，避免翻页带入时间
+            $.post(
+                "/getorderBydate",
+                {"page": 1, "status": 3},
+                function (res) {
+                    if (res != null) {
+                        _self.pageInfo = res;
+                        _self.orders = res.list;
+                        _self.cpage = res.pageNum;
+                        _self.tpage = res.pages;
+                        _self.status = 3;
+                        console.log("退单响应的订单内容："+_self.orders);
+
+                    } else {
+                        layer.msg("当前无退单信息");
+                    }
+
+                }
+            );
+        },
+        del(id) {
+
+        },
+        go(num) {
+            var _seft = this;
+            var startdate=document.getElementById("test25").value;
+            console.log("时间范围查询开始的日期statdate："+startdate);
+            var enddate=document.getElementById("test26").value;
+            console.log("时间范围查询截止的日期enddate:"+enddate);
+            let page;
+            console.log("触发下一页请求的状态标志：status"+_seft.status);
+            console.log("当前操作页数功能num:"+num);
+            switch (num) {
+                case 1:
+                    page = 1;
+                    break;
+                case 2:
+                    page = _seft.pageInfo.isFirstPage ? 1 : _seft.pageInfo.prePage;
+                    break;
+                case 3:
+                    page = _seft.pageInfo.isLastPage ? _seft.pageInfo.LastPage : _seft.pageInfo.nextPage;
+                    break;
+                case 4:
+                    page = _seft.pageInfo.pages;
+                    break;
+            }
+            $.post(
+                "/getorderBydate",
+                {"page": page, "status": _seft.status,"startdate":startdate,"enddate":enddate},
+                function (res) {
+                    _seft.pageInfo = res;
+                    _seft.orders = res.list;
+                    _seft.cpage = res.pageNum;
+                    _seft.tpage = res.pages;
+                    console.log("页面切换响应的对应订单内容："+_seft.orders);
+
+                }
+            )
+        }
+    },
+    //加载事件
+    mounted: function () {
+        //用_self表示app
+        var _self = this;
+        _self.globalstartdate=null;//重置全局开始时间，避免翻页带入时间
+        _self.globalenddate=null;//重置全局结束时间，避免翻页带入时间
+        console.log("订单加载事件")
+        //加载商品信息--pageInfo
+        $.post(
+            "/getorderBydate",
+            {"page": _self.page, "status":1},
+            function (res) {
+                _self.pageInfo = res;
+                _self.orders = res.list;
+                _self.cpage = res.pageNum;
+                _self.tpage = res.pages;
+                _self.status=1;
+                console.log("加载事件响应的订单内容："+_self.orders);
+
+            }
+        );
+        $.post(
+            "/getallLogtype",
+            function (res) {
+                _self.logtypes=res;
+                console.log("加载获得的物流类型信息"+_self.logtypes)
+            }
+        );
+    }
+}
+const vue = Vue.createApp(app);
+vue.mount("#container");
+</script>
+<script>
+    layui.use(['table', 'form','laydate'], function () {
+        var laydate=layui.laydate;
+        //点我触发
+        laydate.render({
+            elem: '#test25'
+            ,eventElem: '#test25-1'
+            ,trigger: 'click'
+        });
+        laydate.render({
+            elem: '#test26'
+            ,eventElem: '#test25-1'
+            ,trigger: 'click'
+        });
+        /*渲染表单*/
+        var table = layui.table;
+        table.render();
+        table.render('checkbox', 'test1');
+        var form = layui.form;
+        form.render();
+
+
+    })
+
+</script>
+
+</html>

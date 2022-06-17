@@ -1,0 +1,62 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+#warp{
+    width: 100%;
+    height: 1600px;
+    background: #f5f5f5;
+}
+#header{
+    width: 100%;
+    height: 100px;
+    background: #FFFFFF;
+}
+#headContaniner{
+    width: 1400px;
+    height: 100px;
+    margin: 0 auto;
+}
+#contaniner{
+    width: 1400px;
+    height: 1200px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+#homeLeft{
+    width: 200px;
+    height: 1000px;
+    float: left;
+    background: #fff;
+}
+#homeRight{
+    width: 1100px;
+    height: 1000px;
+    float: left;
+    margin-left: 20px;
+}
+#ula{
+    width: 160px;
+    margin-top: 80px;
+
+}
+#ula li{
+    margin: 0 20px;
+    width: 200px;
+    height: 50px;
+
+}
+#ula li a{
+    line-height: 50px;
+    text-align: left;
+    display: block;
+    font-family: 华文宋体;
+    font-size: 16px;
+    font-weight: bold;
+    color: #757575;
+}
+#ula li a:hover{
+    color: #01AAED;
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nb.yyds220118.dao.IproductstypeDao">
+    <select id="list" resultType="productstype">
+        select * from productstype
+    </select>
+    <delete id="delete">
+        delete from productstype where tid=#{tid}
+    </delete>
+    <select id="list1" resultType="productstype">
+        select  * from productstype
+    </select>
+    <insert id="add1">
+        insert into productstype(tname,tisparenttype,tparenttypeid)
+        values (#{tname},#{tisparenttype},#{tparenttypeid})
+    </insert>
+    <update id="update1">
+        update productstype set tname=#{tname},
+        tisparenttype=#{tisparenttype},tparenttypeid=#{tparenttypeid}
+        where tid=#{tid}
+    </update>
+
+
+    <!--关联查询父类id和类别名称将数据存放到新属性parentname中-->
+    <resultMap id="parentname" type="productstype">
+        <id property="tparenttypeid" column="tparenttypeid"></id>
+        <association property="parentname" column="tparenttypeid" select="selparentname"></association>
+    </resultMap>
+    <!--主表信息-->
+    <select id="select" resultMap="parentname">
+        select * from productstype
+    </select>
+    <!--副表信息-->
+    <select id="selparentname" resultType="String">
+        select  tname from productstype where tid=#{tparenttypeid}
+    </select>
+    <!--<select id="select" resultType="productstype">
+
+    </select>-->
+</mapper>

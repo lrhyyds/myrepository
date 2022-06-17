@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nb.yyds220118.dao.IProductsDao">
+    <!--获取购物车中的所有信息-->
+    <select id="getBuyshopping" resultMap="getUserProducts">
+        select * from products p,shoppingcar s where s.uno=#{uno} and s.pid=p.pid
+    </select>
+    <resultMap id="getUserProducts" type="products">
+        <result property="userpaynum" column="upnum"></result>
+    </resultMap>
+
+    <!--通过pid获得商品信息-->
+    <select id="getProductById" resultType="products">
+        select * from products where pid=#{pid}
+    </select>
+
+    <!--修改商品的销量和库存-->
+    <update id="updateProducts">
+        update products set pnum=pnum-1,psoldnum=psoldnum+1 where pid=#{pid}
+    </update>
+
+    <!--修改商品的销量和库存Jq-->
+    <update id="updateProductsJq">
+        update products set pnum=pnum-#{num},psoldnum=psoldnum+#{num} where pid=#{pid}
+    </update>
+
+    <!--删除选中的购物车信息-->
+    <delete id="delCheckedProducts">
+        delete from shoppingcar where uno=#{uno} and carid in
+        <foreach collection="list" item="pro" open="(" close=")" separator=",">
+            #{pro.carid}
+        </foreach>
+    </delete>
+
+    <!--删除选中的购物车信息jq-->
+    <delete id="delCheckedProductsjq">
+        delete from shoppingcar where uno=#{uno} and pid =#{pid} and carid=#{carid}
+    </delete>
+
+    <!--根据pid得到商品信息-->
+    <select id="getProductsByPid" resultType="products">
+        select * from products where pid=#{pid}
+    </select>
+
+    <!--增加购物车中的商品-->
+    <insert id="addShoppingCar">
+        insert into shoppingcar(uno,pid,upnum) values (#{uno},#{pid},#{upnum})
+    </insert>
+
+    <!--随机得到商品-->
+    <select id="randomGetProduct" resultType="products">
+        select * from products order by rand() limit 4
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,491 @@
+$btnColor: #E2C199;
+$styleColor:#b4a078;
+$fontColor: #CC9756;
+
+//提取出来的公共样式
+.h_title{
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+    margin-right: 20px;
+    cursor: pointer;
+    &:hover{
+      color: $fontColor;
+    }
+}
+//图片触摸放大
+.img_scale{
+  transition: 1s ease-out;
+    &:hover{
+      transform:  scale(1.1);
+    }
+}
+
+//商品价格统一样式
+.price {
+    font-size: 13px;
+    line-height: 13px;
+    color: #d4282d;
+    padding: 1px 0 9px;
+    margin: 0;
+}
+
+//list 的公共样式
+.slickWidth {
+  .box{
+    ul{
+      display: flex;
+      justify-content: space-between;
+     
+      li{
+        position: relative;
+        width: 265px;
+        height: 100%;
+        cursor: pointer;
+        &:hover{
+          background-color: #F4F0EA;
+          .hd img{
+            &:nth-of-type(1){
+              display: none;
+            }
+          }
+          .hd img{
+            &:nth-of-type(2){
+              display: block;
+            }
+          }
+        }
+        .hd{
+          width: 265px;
+          height: 265px;
+          background-color: #f4f4f4;
+          img{
+            width:100%;
+            height:100%;
+            &:nth-of-type(2){
+              display: none;
+            }
+          }
+          
+        }
+        .bd{
+          text-align: center;
+          .prdtTags{
+            text-align: center;
+            span{
+              display: inline-block;
+              font-size: 12px;
+              height: 20px;
+              line-height: 20px;
+              color: #fff!important;
+              margin: 5px 0;
+              padding: 0 5px;
+              background-color: #e36844;
+            }
+          }
+          .name{
+            width: 166px;
+            margin: 0 auto 4px;
+            max-height: 40px;
+            line-height: 20px;
+            font-size: 13px;  
+          }
+          .price{
+            .price-new{
+              color: #d4282d;
+            }
+            .price-old{
+              font-size: 12px;
+              color: #999;
+              text-decoration: line-through;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+//小日本制造
+.logo_title{
+  position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 20px;
+    font-size: 12px;
+    color: #a7936e;
+    border: 1px solid #b3a07d;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 0 4px;
+    line-height: 18px;
+    background-color: #f4f0ea;
+}
+// 2行省略号显示
+.name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/********** 轮播图区域 start **********/
+.swiper-container {
+  position: relative;
+  height: 420px;
+  overflow: hidden;
+  background-color: #F5F5F5;
+  margin-bottom: 30px;
+  .swiper-wrapper {
+    position: relative;
+    height: 420px;
+    a{
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      img{
+        opacity: 0;
+      }
+    }
+  }
+  .swiper-button {
+    .next , .prev{
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      opacity: 80;
+      border-radius: 500px;
+      top: 50%;
+      transform: translateY(-50%);
+      &:hover{
+        background-color: #CC9756;
+      }
+    }
+    .prev{
+      left: 154.5px;
+      background: url('../images/yanxan_sprites1.png') 0 -5438px no-repeat;
+      background-color: $btnColor;
+    }
+    .next{
+      right: 154.5px;
+      background: url('../images/yanxan_sprites1.png') 0 -5658px no-repeat;
+      background-color: $btnColor;
+    }
+  }
+  .swiper-pagination{
+    position:absolute;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    display: flex;
+    li{
+        width:20px; 
+        height:20px;
+        background-color: #fff;
+        border-radius: 500px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+  }
+}
+/********** 轮播图区域 end **********/ 
+
+/********** 内容区域 m-newProducts start **********/ 
+.m-newProducts{
+  height: 510px;
+  .center{
+    .m-commonHeader{
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 20px;
+      .f-left{
+        display: flex;
+        align-items: flex-end;
+      }
+    }
+  }
+}
+/********** 内容区域 m-newProducts end **********/ 
+
+
+
+/********** 人气推荐 m-indexPopularItem  start **********/
+.m-indexPopularItem{
+  padding: 60px 0;
+  background-color: #f4f0ea;
+  .m-commonHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    .lh1{
+      display: flex;
+      ul{
+        display: flex;
+        align-items: center;
+        li{
+          margin-right: 50px;
+          padding: 0 5px;  
+        }
+        li:last-child{
+          border-bottom: 2px solid #b4a078;
+        }
+      }
+    }
+  }
+  .showContainer{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .box1 {
+      width: 390px;
+      height: 570px;
+      background-color:#f4f4f4;
+      .popularItem{
+        .hd{
+          position: relative;
+          height:400px;
+          padding: 40px;
+          border-bottom: 1px solid #ccc;
+          box-sizing: border-box;
+          img{
+            width: 320px;
+            height: 320px;
+            cursor: pointer;
+          } 
+        }
+        .bd{
+          text-align: center;
+          h4{
+            padding-top:40px;
+            line-height: 26px;
+            max-height: 52px;
+            margin: 0 auto 13px;
+            font-size: 18px;
+            width: 248px;
+            cursor: pointer;
+            &:hover{
+              color: #b4a078;
+            }
+          }
+          p{
+            font-size: 18px;
+            height: 18px;
+            line-height: 1;
+            color: #d4282d;
+          }
+        }
+      }
+    }
+    .box2{
+      padding-left: 10px;
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-content: space-between;
+      flex-wrap: wrap;
+      .popularItem{
+        text-align: center;
+        width: 223px;
+        height: 280px;
+        background-color:#f4f4f4;
+        .hd{
+          position: relative;
+          width: 223px;
+          height: 180px;
+          border-bottom: 1px solid #ccc;
+          box-sizing: border-box;
+          padding:20px;
+          img{
+            width: 180px;
+            height: 180px;
+            cursor: pointer;
+          }
+        }
+        .bd{
+          h4{
+            width: 166px;
+            margin: 15px auto 10px;
+            line-height: 20px;
+            cursor: pointer;
+            &:hover{
+              color: #b4a078;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+/********** 人气推荐 m-indexPopularItem  end **********/ 
+
+
+
+/********** 居家生活 m-indexCate  start **********/ 
+.m-indexCate{
+  margin-top: 60px;
+  .m-commonHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .lh1{
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      align-items: center;
+      ul{
+        display: flex;
+        justify-content: space-between;
+        a{
+          padding: 0 10px;
+        }
+      }
+    }
+    .rh1{
+      margin-left: 20px;
+    }
+  }
+  .banner{
+    margin: 20px 0;
+    width:100%;
+    height:100%;
+    img{
+      width: 100%;
+      height: 310px;
+    }
+  }
+}
+
+/********** 居家生活 m-indexCate  end **********/ 
+
+/********** 服饰鞋包 m-indexCate  start **********/ 
+/********** 服饰鞋包 m-indexCate  end **********/ 
+
+/********** 大家都在说 g-row start **********/ 
+.g-row{
+  margin-top: 80px;
+  padding: 60px 0;
+  background-color: #f4f0ea;
+  .m-commonHeader{
+    margin-bottom: 30px;
+    .lh1{
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+    }
+  }
+  .slickWidth{
+    position: relative;
+    .carouselImgCon{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      overflow-x: hidden;
+    }
+    ul{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      position: relative;
+      li{
+        margin-left: 11px;
+        a{
+          display: block;
+          width: 353px;
+          height: 353px;
+          overflow: hidden;
+        }
+        div{
+          background-color: #fff;
+          box-sizing: border-box;
+          padding:30px;
+          p:nth-of-type(1){
+            color: #999;
+            font-weight: 400;
+            font-size: 14px;
+          }
+          p:nth-of-type(2){
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            span:nth-of-type(1){
+              display:inline-block;
+              font-size: 16px;
+              font-weight: 700;
+              max-width: 190px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+          p:nth-of-type(3){
+            max-width: 295px;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    .prev,.next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      opacity: 80;
+      border-radius: 500px;
+      background-color: #E2C199;
+      
+      &:hover{
+        background-color: #CC9756;
+      }
+    }
+    .prev{
+      left: -60px;
+      background-image: url(../images/yanxan_sprites1.png);
+      background-position:0 -5438px;
+    }
+    .next{
+      right: -60px;
+      background-image: url(../images/yanxan_sprites1.png);
+      background-position:0 -5658px;
+    }
+  }
+}
+/********** 大家都在说 g-row end **********/ 
+
+
+/********** 盖楼层 start **********/ 
+.fixed{
+  position: fixed;
+  z-index: 9999;
+  background-color: #fff;
+  right: 0;
+  top: 177px;
+  ul {
+    li{
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      cursor: pointer;
+     a{
+       display: block;
+       width: 60px;
+       height: 60px;
+      color: #333;
+     }
+    };
+  }
+}
+
+/********** 盖楼层 end **********/ 

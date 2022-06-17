@@ -1,0 +1,28 @@
+<?xmaddnewsl version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nb.yyds220118.dao.IAdminNewsDao">
+    <!--查询所有新闻-->
+    <select id="getallnew" resultType="news">
+        select  * from news
+    </select>
+    <!--查询对应发布状态的新闻-->
+    <select id="getnewsBynestatus" resultType="news">
+      select * from news where nestatus=#{nestatus}
+    </select>
+    <!--修改新闻内容-->
+    <update id="updatenews" >
+         update news set nestatus=#{nestatus} where nid=#{nId}
+    </update>
+    <!--增加新闻-->
+    <insert id="addnews">
+               insert into news(nestatus,ntitle,ncontent,ncreattime) values(#{nestatus},#{nTitle},#{nContent},#{nCreatTime})
+    </insert>
+    <!--批量删除新闻-->
+    <delete id="delbatchnews">
+        delete  from news where
+        <foreach collection="list" item="n" separator="or" >
+             nid=#{n}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nb.yyds220118.dao.IproductsDao2">
+    <select id="sel" resultType="products2">
+        select * from products
+    </select>
+    <!--联表查询-->
+    <resultMap id="protype" type="products2">
+        <result property="tid" column="tid"/>
+        <collection property="productstype" column="tid"
+        select="getproductstype"/>
+    </resultMap>
+    <!--主表信息-->
+    <select id="sel1" resultMap="protype">
+            select * from products
+    </select>
+    <!--副表信息-->
+<select id="getproductstype" resultType="productstype">
+select tname from productstype where tid=#{tid}
+</select>
+<delete id="del">
+    delete from products where pid=#{pid}
+</delete>
+<insert id="add">
+    insert into products(pname,pprice,pnum,tid) values (#{pname},#{pprice},#{pnum},#{tid})
+</insert>
+    <update id="update">
+        update products set pname=#{pname},pprice=#{pprice},pnum=#{pnum}
+        where pid=#{pid}
+    </update>
+    <select id="getIdByName" resultType="int">
+        select pid from products where pname=#{pname}
+    </select>
+
+    <select id="desc" resultType="products2">
+              select * from products order by psoldnum desc
+</select>
+  <select id="getfourMonth" resultType="double">
+    select sum(oCost)  from orders where oCreatTime between date_sub(now(),interval 12 month)
+    and now()
+  </select>
+</mapper>

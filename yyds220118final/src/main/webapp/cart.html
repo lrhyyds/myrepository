@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="keywords" content="个人开发学习" />
+  <meta name="description" content="个人开发学习" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人开发学习</title>
+  <script src="/layui/layui.all.js"></script>
+  <script src="/layui/layui.js"></script>
+  <script src="/js/vue3.js"></script>
+  <script src="/js/jquery3.3.1.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+<!--引入自定义js文件-->
+  <script src="/js/libs/jquery.js"></script>
+  <script src="/js/libs/animate_tools.js"></script>
+  <script src="/js/cart.js"></script>
+  <script src="/js/common.js"></script>
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+  <!-- 公共样式CSS -->
+  <link rel="stylesheet" href="./css/common.css">
+  <!-- 首页样式 -->
+  <link rel="stylesheet" href="./css/cart.css">
+</head>
+
+<body>
+  <!-- 头部 -->
+  <header id="header">
+    <!-- 头,顶部 start -->
+    <div class="header">
+      <div class="center">
+        <div class="left">
+          <a href="#">
+            欢迎来到我的个人开发网站
+          </a>
+        </div>
+        <div class="right">
+          <ul>
+            <li id="isLogin"> </li>
+            <li> <a href="#">我的购物车</a></li>
+           <!-- <li> <a href="#">会员</a></li>
+            <li> <a href="#">甄选家</a></li>
+            <li class="dropMeun">
+              <a href="#" class="iconfont">企业采购 &#xe61b</a>
+              <ul>
+                <li><a href="#">企业购</a></li>
+                <li><a href="#">礼品卡</a></li>
+                <li><a href="#">联系我们</a></li>
+              </ul>
+            </li>
+            <li class="dropMeun">
+              <a href="#" class="iconfont">客户服务 &#xe61b</a>
+              <ul>
+                <li><a href="#">在线客服</a></li>
+                <li><a href="#">帮助中心</a></a></li>
+                <li><a href="#">商务合作</a></li>
+                <li><a href="#">开放平台</a></li>
+              </ul>
+            </li>-->
+            <li class="dropMeun">
+              <a href="/index.html" class="iconfont">&#xe612 我的</a>
+              <ul>
+                <li><a href="#" onclick="gotoback()">个人中心</a></li>
+                <li><a href="#" onclick="out()">退出登录</a></a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- 头,顶部 end -->
+
+    <!-- 头, 搜索区域 start -->
+    <div class="search">
+      <div class="center">
+        <div class="logo">
+          <a href="index.html">logo</a>
+        </div>
+        <div class="search-btn">
+          <div class="top">
+            <input type="text" autocomplete="off" maxlength="100">
+            <span>搜索</span>
+            <i></i>
+          </div>
+          <div class="bottom">
+
+          </div>
+        </div>
+        <a class="cart" href="./cart.html">
+          <i class="gwc"></i>
+          <span class="text">购物车</span>
+          <!-- <i class="circle">0</i> -->
+        </a>
+      </div>
+    </div>
+    <!-- 头, 搜索区域 end -->
+
+    <!-- 头, nav区域 start-->
+    <ul class="nav center">
+      <li><a href="index.html" class="current">首页</a></li>
+
+    </ul>
+    <!-- 头, nav区域 end-->
+  </header>
+
+<!--
+js文件中绑定的组件m-cart区域开始
+-->
+  <!-- 购物车结算 -->
+  <div class="m-cart">
+    <div class="center">
+      <div class="c-detail" id="shoppingcontent">
+        <ul id="contentinfo">
+          <!--头部 标识-->
+          <li>
+            <div class="w1">
+              <input type="checkbox">
+              <span>全选</span>
+            </div>
+            <div class="w2">
+              商品信息
+            </div>
+            <div class="w3">
+              单价
+            </div>
+            <div class="w4">
+              数量
+            </div>
+            <div class="w5">
+              小计
+            </div>
+            <div class="w6">
+              操作
+            </div>
+          </li>
+
+
+
+        </ul>
+      </div>
+
+      <!--总计-->
+      <div class="cart-total">
+        <ul>
+          <li>
+            <div class="w1">
+              <div class="box1">
+                <!-- <input type="checkbox"> -->
+                <span></span>
+                <span></span>
+              </div>
+              <div class="box2">
+                <a href="#"></a>
+                <!-- <a href="#">清空失效商品</a> -->
+              </div>
+            </div>
+            <div class="w2">
+              <div class="info">
+                <p>
+                  <span>商品合计:</span>
+                  <span clas="zje" id="zje">¥0.00</span>
+                </p>
+                <p>
+                  <span>已优惠(95折):</span>
+                  <span class="dz">-¥0.00</span>
+                </p>
+              </div>
+              <div class="total">
+                <p>
+                  <span>应付总额：</span>
+                  <span class="yfje">¥ 0.00</span>
+                </p>
+                <a href="#">不再犹豫啦！</a>
+              </div>
+              <a href="javascript:" class="submit">下单</a>
+            </div>
+
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+  <!--
+  js文件中绑定的组件m-cart区域结束
+  -->
+
+
+
+  <!-- 底部 -->
+  <footer>
+    <div class="center">
+      <div class="yx-cp-m-ft1">
+        <div class="yx-cp-item">
+          <h4></h4>
+          <div class="btn">
+            <a href="#">
+              <i></i>
+              <span></span>
+            </a>
+            <a href="#">
+              <i></i>
+              <span></span>
+            </a>
+          </div>
+        </div>
+        <div class="yx-cp-item" >
+          <h4 style="background-color: #eb7350;">个人学习开发网站</h4>
+          <p>
+            该网站用于测试开发产品，不用于商业用途,欢迎同行来访，共同学习
+          </p>
+          <div class="ewm" style="text-align: center;background-color: #93D1FF;">
+            &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#b2b2b2;size: 30pt;background-color: white;">赣ICP备2021011648号-1</a>
+
+          </div>
+        </div>
+        <div class="yx-cp-item">
+
+        </div>
+      </div>
+      <!-- 还有一个底部,不打算做了,没意义. 为什么提交不了-->
+      <div class="yx-cp-m-ft2"></div>
+    </div>
+  </footer>
+
+  <!--弹出地址信息框-->
+  <div id="address" style="display: none">
+    <div id="checkAddress"></div>
+  </div>
+
+  <!--弹出添加地址框-->
+  <div id="addAddressDiv" style="display: none">
+    <div style="margin-left: 100px; margin-top: 10px">
+      地址:<input type="text" id="Aaddress" style="width: 180px" class="layui-input"/></br>
+      收货人:<input type="text" id="Aname" style="width: 180px" class="layui-input"/></br>
+      联系电话:<input type="text" id="Aphone" style="width: 180px" class="layui-input"/></br>
+      <input type="button" class="layui-btn" onclick="AddAddress()" value="确定"/></br>
+    </div>
+  </div>
+
+
+  <script>
+    layui.use(['form', 'layer','jquery'],
+            function() {
+              $ = layui.jquery;
+              var form = layui.form,
+                      layer =layui.layer;});
+    //增加收货地址
+    function AddAddress() {
+      layer.closeAll();
+      $.post("/getUserByUno",function (user) {
+        //获取当前登录的用户的信息
+        var uNO=(user.uno);
+        var uConsignee=$("#Aname").val();
+        var uReceivingPhone=$("#Aphone").val();
+        var uAddress=$("#Aaddress").val();
+        //增加地址
+        $.post("/addUserAddress",{"uNO":uNO,"uConsignee":uConsignee,
+          "uReceivingPhone":uReceivingPhone,"uAddress":uAddress},function (count) {
+          if (count!=0){
+            layer.alert("增加成功!",function () {
+              location.reload();
+            });
+          }
+          else {
+            layer.alert("增加失败!",function () {
+              location.reload();
+            });
+          }
+
+        })
+      })
+    }
+    /*没有收获地址时 点击增加收货地址*/
+    function addAddress() {
+      $.post("/getUserByUno", function (user) {
+        layer.closeAll();
+        var uno = (user.uno);
+        layer.open({
+          title: "增加收货地址",
+          type: 1,
+          content: $('#addAddressDiv')
+          , area: ['500px', '500px']
+          , btnAlign: 'c' //按钮居中
+          , shade: 0 //不显示遮罩
+        });
+      });
+    }
+    //购买的方法
+    /*function payment() {
+      $.post("/getUserByUno",function (user) {
+        //获得用户编号
+        var uno=user.uno;
+        //console.log("uno"+uno);
+        var addressInfoAll=($("input[name='addressInfo']").val());
+        var url=window.location.href;
+        //console.log("url"+url);
+        $.post("/payment",{"uno":uno,"addressInfoAll":addressInfoAll,"pid":pid},function (res){
+          if(res==1){
+            layer.msg("购买成功!",{time:1000},function () {
+              location.reload();
+            });
+          }
+          else {
+            layer.alert("购买失败!",{time:1500},function () {
+              location.reload();
+            });
+          }
+        });
+
+      });
+    }*/
+  </script>
+
+
+
+
+<!--  <script src="js/vue3.js"></script>-->
+
+
+
+  <!--<script>
+    const app={
+      //定义数据，vue中定义变量的地方
+      data(){
+        return{
+          products:null,
+          pdesc:null,
+          pfileName:null,
+          pid:80,
+          pname:null,
+          pnum:null,
+          pprice:null,
+          psoldnum:null,
+          pstatus:null,
+          tid:null,
+          userpaynum:null
+        }
+      },
+      //定义方法
+      methods:{
+
+      },
+      //定义加载方法，加载时自动调用
+      mounted:function(){
+        //_self表示app
+        var _self=this;
+        //使用异步获取后端用户信息
+        $.post("/getMyShoppingCar",{"page":1,"limit":5},
+                function(pagetable)  {
+                  _self.products=pagetable.data;
+                  console.log("jsjj")
+                  console.log(_self.products);
+                  for (let i = 0; i <_self.products.length ; i++) {
+                    console.log(i);
+                    _self.pdesc=_self.products[i].pdesc;
+                    _self.pfileName=_self.products[i].pfileName;
+                    _self.pid=_self.products[i].pid;
+                    _self.pname=_self.products[i].pname;
+                    _self.pnum=_self.products[i].pnum;
+                    _self.pprice=_self.products[i].pprice;
+                    _self.psoldnum=_self.products[i].psoldnum;
+                    _self.pstatus=_self.products[i].pstatus;
+                    _self.tid=_self.products[i].tid;
+                    _self.userpaynum=_self.products[i].userpaynum;
+                    console.log(_self.pname);
+                    var html=`<li><div class="w1"><input type="checkbox"></div><div class="w2"><div class="pic"><a href="#"><img src="./images/product/`
+                    html+=_self.pfileName;
+                    html+=`" alt=""></a></div><div class="nameCon"><div class="promotionBar"><span>特价抢购中</span><span>距优惠结束</span><span>2天12小时</span></div><a href="#">`
+                    html+=_self.pdesc;
+                    html+=`</a><span>直径40CM 海军蓝</span></div></div><div class="w3"><span>¥`
+                    html+=_self.pprice;
+                    html+=`</span></div><div class="w4"><span>-</span><input type="text" value="1"><span>+</span></div><div class="w5"><span class="price">¥`
+                    html+=_self.pprice;
+                    html+=`</span></div><div class="w6"><a href="#">删除</a></div></li>`;
+                    var dd=document.getElementById("contentinfo");
+                    dd.insertAdjacentHTML("beforeend",html);
+                    //$("#contentinfo").html(html);
+                  }
+                  //重新配置数据——重新配置了角色的信息，layui.form.render()不能配置自己，要其他方法配置
+                  //layui.form.render();
+                });
+      }
+    }
+    //通过app创建一个vue实例
+    const vue=Vue.createApp(app);
+    //用vue实例和某个标签绑定——标签内可以使用vue实例的所有数据和方法
+    vue.mount("#shoppingcontent");
+  </script>-->
+
+  <!--退出登录-->
+  <script>
+    layui.use(['form', 'layer','jquery'],
+            function() {
+              $ = layui.jquery;
+              var form = layui.form,
+                      layer =layui.layer;});
+    function out() {
+      layer.confirm('你真的要离我而去吗?', {
+        btn: ['残忍离去', '留下'] //按钮
+      }, function () {
+        console.log("确认离去");
+        sessionStorage.clear();
+        $.post({
+          url: '/outlogin',
+          success: function (res) {
+            console.log("接收到返回参数"+res);
+            if (res=1) {
+              layer.msg("大爷，下次再来玩啊",{time: 1000, shade: 0.4},function () {
+                location.href="/index.html";
+              });
+            }
+          }
+        });
+      },function () {
+        layer.msg('感谢您留了下来');
+      });
+    };
+    function gotoback(){
+      console.log("进入gotoBack方法");
+      $.ajax({
+        url:'/gotoBack',
+        success:function (res){
+          location.href=res;
+        }
+      });
+    }
+  </script>
+
+</body>
+
+</html>

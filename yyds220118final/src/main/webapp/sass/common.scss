@@ -1,0 +1,453 @@
+$styleColor:#b4a078;
+$fontColor: #CC9756;
+
+
+.dropMeun{
+  position: relative;
+  ul {
+    position: absolute;
+    display: none;
+    border: 1px solid #ddd;
+    min-width: 83px;
+    z-index: 999;
+    li{
+      text-align: center;
+      background-color: #fff;
+      a{
+        border:none !important;
+        &:hover{
+          color: $fontColor !important;
+        }
+      }
+    }
+  }
+  &:hover{
+   ul{
+    display: block;
+   }
+  }
+}
+
+body,h1,h2,h3,h4,h5,h6,p,dl,dd {
+  margin: 0;
+}
+body {
+  font-size: 14px;
+  color: #333;
+  font-family: "Microsoft Yahei","微软雅黑",verdana;
+}
+ul,ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+img {
+  border: none;
+  display:block;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  color: $styleColor;
+}
+input {
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+  border: 1px solid #ccc;
+}
+label {
+  vertical-align: middle;
+}
+table {
+  border-collapse: collapse;
+}
+th,td {
+  padding: 0;
+}
+i{
+  font-style: normal;
+}
+.center {
+  width: 1090px;
+  margin: auto;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.fs-14{
+  color: #333;
+  font-size: 14px;
+}
+.clearfix::after {
+  content: ' ';
+  display: block;
+  clear: both;
+}
+.current{
+  border-bottom: 3px solid $fontColor; 
+  color: $fontColor !important;
+}
+button{
+  border: none;
+}
+
+@font-face {
+  font-family: "iconfont"; /* Project id  */
+  src: url('../font/iconfont.ttf?t=1629353855059') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-xia:before {
+  content: "\e61b";
+}
+
+.icon-shouji:before {
+  content: "\e612";
+}
+
+.icon-you:before {
+  content: "\e621";
+}
+
+
+/*----------头部 公共样式 start----------*/
+#header {
+  height: 176px;
+  box-shadow: 0 0 3px 0 rgba(0,0,0,.2);
+  border-bottom: 1px solid #e8e8e8;
+
+  .header{
+    height: 36px;
+    line-height: 36px;
+    background-color: #333;
+    .center{
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .left{
+        background: url(../images/laba.gif) center left no-repeat;
+        a{
+          margin-left: 28px;
+          color: $fontColor;
+          font-size: 12px;
+          text-decoration: underline;
+        }
+        a:hover{
+          color: #fff;
+          text-decoration: none;
+        }
+      }
+      .right{
+        >ul{
+          display: flex;
+          flex-direction: row;
+          li:last-child{
+            a{
+              border-right: none;
+            }
+          }
+          a{
+            font-size: 12px;
+            height: 36px;
+            cursor: pointer;
+            color: #ccc;
+            padding: 0 14px;
+            border-right: 1px solid #ccc;
+          }
+          a:hover{
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+  .search{
+    display:flex;
+    height:110px;
+    .center{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      .logo{
+        a{
+          display: block;
+          text-indent: -9999px;
+          overflow: hidden;
+          width: 252px;
+          padding-top: 51px;
+          height:0;
+          background: url(../images/yanxuan_sprites.png) 0 -303px no-repeat;
+        }
+      }
+      .search-btn {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        .search-ret{
+          position: absolute;
+          top: 38px;
+          left: 40px;
+          background-color: #fff;
+          border: 1px solid #e8e8e8;
+          border-top: none;
+          font-size: 14px;
+          outline: 0;
+          width: 400px;
+          z-index: 99;
+          li{
+            height: 30px;
+            line-height: 30px;
+            text-indent: 5px;
+          }
+        }
+        .top{
+          position: relative;
+          display: flex;
+          
+          input {
+            width: 442px;
+            height:38px;
+            border: 1px solid $fontColor;
+            border-bottom-left-radius: 19px;
+            border-top-left-radius: 19px;
+            font-size: 14px;
+            padding-left: 38px;
+            outline: 0;
+            overflow: hidden;
+            box-sizing: border-box;
+          }
+          span{
+            display: block;
+            width: 90px;
+            height: 38px;
+            border-top-right-radius: 19px;
+            border-bottom-right-radius: 19px;
+            background-color: $fontColor;
+            color: #fff;
+            line-height: 38px;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+            cursor: pointer;
+          }
+          span:hover{
+            background-color: #E2C199;
+          }
+          i{
+            position: absolute;
+            left: 18px;
+            top: 12px;
+            width: 15px;
+            height: 15px;
+            background: url(../images/yanxuan_sprites.png) 0 -518px no-repeat;
+          }
+        }
+      }
+      .bottom{
+        a{
+          display: inline-block;
+          padding: 0 10px;
+          font-size: 12px;
+          color: $fontColor;
+        }
+      }
+      .cart{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+        width: 134px;
+        height: 38px;
+        border: 1px solid $fontColor;
+        border-radius: 19px;
+        box-sizing: border-box;
+        padding:0 10px;
+        .gwc{
+          display: block;
+          height: 18px;
+          width: 18px;
+          background: url(../images/yanxuan_sprites.png)  0px -147px no-repeat; 
+        }
+        .text{
+          color: $fontColor;
+        }
+        .circle{
+          display: block;
+          height: 20px;
+          width: 20px;
+          text-align: center;
+          line-height: 20px;
+          color: #fff;
+          background: url(../images/yanxuan_sprites.png) 0 -50px;
+        }
+        &:hover{
+          background-color: #F5F3EF;
+        }
+      }
+    }
+  }
+  .nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 9;
+    li {
+      ul{
+        display: flex;
+        
+        position: absolute;
+        width: 1202px;
+        z-index: 99;
+        top: 30px;
+        left:-70px;
+        padding: 14px 20px 20px;
+        background: #fff;
+        border: 1px solid rgba(0,0,0,.1);
+        // display:none;
+
+        li {
+          margin-right: 20px;
+          width:124px;
+          h3{
+            margin-left:10px;
+            border-bottom: 1px solid #ccc;
+          }
+          .list{
+            margin: 10px 0;
+          }
+         p{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+         }
+          .icon{
+            width:50px;
+            height:50px;
+          }
+        }
+      }
+      a{
+        font-weight: bold;
+        color: #000;
+        padding-bottom: 8px;
+        &:hover{
+          color: $fontColor;
+          border-bottom: 3px solid $fontColor; 
+        }
+      }
+    }
+  }
+}
+/*----------头部 公共样式  end----------*/
+
+
+
+/*----------底部 公共样式  start----------*/
+footer {
+  margin-top: 50px;
+  border-top: 1px solid #ccc;
+  text-align: center;
+  .yx-cp-m-ft1 {
+    display: flex;
+    justify-content: space-between;
+    .yx-cp-item {
+      h4{
+        font-size: 16px;
+        font-weight: 400;
+        margin-bottom: 28px;
+      }
+      width: 360px;
+     margin: 50px 0;
+      &:nth-of-type(1){
+        border-right: 1px solid #ccc;
+        .btn {
+          a{
+            display: inline-block;
+            width: 80px; 
+            height: 96px;
+            border: 1px solid #ccc;
+            margin-left: 20px;
+            color:#333;
+            i{
+              display: block;
+              margin: 20px auto;
+              height: 26px;
+              width: 31px;
+            }
+          }
+          a:first-child{
+            i{  
+                background-image: url(../images/yanxuan_sprites3.jpg);
+                background-position: 0 -290px;
+              }
+          }
+          a:last-child{
+            i{
+                background-image: url(../images/yanxuan_sprites3.jpg);
+                background-position: 0 -97px;
+              }
+          }
+        }
+      }
+      &:nth-of-type(2){   
+        border-right: 1px solid #ccc;
+        p{
+          text-align: left;
+          padding: 0 37px;
+          font-size: 12px;
+          line-height: 18px;
+          margin-bottom: 22px;
+        }
+        .ewm{
+          padding: 0 37px;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          i{
+            display: block;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            margin-left: 20px;
+            background-image: url(../images/yanxuan_sprites3.jpg);
+            &:nth-of-type(1){
+              background-position: 0 -326px;
+            }
+            &:nth-of-type(2){
+              background-position: 0 -428px;
+            }
+            &:nth-of-type(3){
+              background-position: 0 -470px;
+            }
+          }
+        }
+      }
+      &:nth-of-type(3){
+        img{
+          margin: 0 auto;
+        }
+        p{
+          color: #b4a078;
+          font-size: 12px;
+          margin-top: 3px;
+        }
+      }
+    }
+  }
+}
+/*----------底部 公共样式  end----------*/

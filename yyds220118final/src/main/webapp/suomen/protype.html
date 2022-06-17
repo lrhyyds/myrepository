@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品类型</title>
+</head>
+<body>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品</title>
+
+    <!-- ../ 表示当前路径的上一层路径
+        /表示从根路径开始查找
+      -->
+    <script src="../layui/layui.js"></script>
+    <!--<script src="../js/vue3.js"></script>-->
+    <link rel="stylesheet" href="../layui/css/layui.css">
+</head>
+<body>
+<div class="layui-btn-group demoTable">
+    <!--    <button class="layui-btn" data-type="getCheckData">删除选中行数据</button>-->
+    <button class="layui-btn" data-type="getCheckLength">获取选中数目</button>
+    <button class="layui-btn" data-type="isAll">验证是否全选</button>
+    <button class="layui-btn" data-type="add">增加</button>
+    <button class="layui-btn" data-type="update">修改</button>
+</div>
+<table class="layui-table" lay-data="{width: 892, height:500, url: '../list', page:true, id:'idTest'}"
+       lay-filter="demo">
+    <thead>
+    <tr>
+        <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+        <th lay-data="{field:'tid', width:80}">类型编号</th>
+        <th lay-data="{field:'tname', width:120, sort: true}">商品类型名称</th>
+        <th lay-data="{field:'tisparenttype', width:120, sort: true,templet:'#tparenttype'}">是否为父类</th>
+        <th lay-data="{field:'tisparenttypeid', width:120, sort: true,templet:'#tisparenttypeid' }">父类名称</th>
+        <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}"></th>
+    </tr>
+    </thead>
+</table>
+<script type="text/html" id="tparenttype">
+
+    <span class="layui-badge layui-bg-blue">{{d.tisparenttype==0?"否":"是" }}</span>
+</script>
+<script type="text/html" id="tisparenttypeid">
+    <span class="layui-badge layui-bg-blue">{{d.tparenttypeid==0?'无父类':d.parentname}}</span>
+</script>
+<!--</script>-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    //加载模块
+    layui.use('table', function () {
+        var table = layui.table;
+        //监听表格复选框选择
+        table.on('checkbox(demo)', function (obj) {
+            console.log(obj)
+        });
+        //监听工具条
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                layer.msg('ID：' + data.id + ' 的查看操作');
+            } else if (obj.event === 'del') {
+
+                layer.confirm('真的删除行么', function (index) {
+                    $.post("/delete", {"tid": data.tid}, function (res) {
+                        if (0 == res) { //删除成功
+                            obj.del()
+                        } else {
+                            layer.msg("删除失败！未知异常！");
+                        }
+                        layer.close(index); //关闭确认删除窗口
+                    })
+
+                });
+            } else if (obj.event === 'edit') {
+                layer.alert('编辑行：<br>' + JSON.stringify(data))
+            }
+        });
+
+        var $ = layui.$, active = {
+            getCheckData: function () { //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                // layer.alert(JSON.stringify(data));
+                console.log(data)//浏览器的检查里面的控制台窗口
+                //  var p="empno=";
+                // for (let i=0;i<data.length;i++){
+                //     p+=data[i].empno;
+                //     if (i<data.length-1){
+                //         p+="&empno=";
+                //     }
+                // }
+                var loadIndex;
+                $.ajax({
+                    url: "/delete",
+                    type: "post",
+                    data: JSON.stringify(data),//参数
+                    contentType: "application/json",
+                    beforeSend: function () {
+                        loadIndex = layer.load(2);
+                    },
+                    success: function (res) {
+                        if (0 == res) {
+                            layer.close(loadIndex);
+                            //刷新当前页面
+                            location.reload();
+                        }
+                    }
+                });
+            }
+            , getCheckLength: function () { //获取选中数目
+                var checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                layer.msg('选中了：' + data.length + ' 个');
+            }
+            , isAll: function () { //验证是否全选
+                var checkStatus = table.checkStatus('idTest');
+                layer.msg(checkStatus.isAll ? '全选' : '未全选')
+            }
+            , add: function () {
+
+                layer.open({
+                    //1表示弹出一个本页面的层DIV
+                    //2表示弹出一个新的独立的页面iframe
+                    type: 1,
+                    content: $("#add")
+                });
+            }
+            , update: function () {
+                layer.open({
+                    //1表示弹出一个本页面的层DIV
+                    //2表示弹出一个新的独立的页面iframe
+                    type: 1,
+                    content: $("#update")
+                });
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+
+<div id="add" style="display:none;width:500px;height:300px;">
+    <form id="protypeform">
+        <table border="0">
+            <tr height="50">
+                <td>商品类型名称</td>
+                <td><input name="tname" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="50">
+                <td>是否为父类(0为否，1为是)</td>
+                <td><input name="tisparenttype" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="50">
+                <td>父类编号:</td>
+                <td><input name="tparenttypeid" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button onclick="add()"
+                            class="layui-btn" type="button">
+                        提交
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div id="update" style="display:none;width:500px;height:300px;">
+    <form id="protypeform1">
+        <table border="0">
+            <tr height="50">
+                <td>类型编号</td>
+                <td><input name="tid" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="50">
+                <td>商品类型名称</td>
+                <td><input name="tname" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="50">
+                <td>是否为父类(0为否，1为是)</td>
+                <td><input name="tisparenttype" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="50">
+                <td>父类编号:</td>
+                <td><input name="tparenttypeid" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button onclick="update()"
+                            class="layui-btn" type="button">
+                        提交
+                    </button>
+                </td>
+            </tr>
+        </table>
+
+    </form>
+</div>
+<script src="/js/jquery3.3.1.min.js"></script>
+<script>
+    function add() {
+        var loadIndex;
+        $.ajax({
+            url: "/add1",
+            data: $("#protypeform").serialize(),//序列化
+            beforeSend: function () {
+                loadIndex = layer.load(2);
+            },
+            success: function (res) {
+                if (0 == res) {
+                    layer.close(loadIndex);
+                    //刷新当前页面
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    function update() {
+        var loadIndex;
+        $.ajax({
+            url: "/update1",
+            data: $("#protypeform1").serialize(),//序列化
+            beforeSend: function () {
+                loadIndex = layer.load(2);
+            },
+            success: function (res) {
+                if (0 == res) {
+                    layer.close(loadIndex);
+                    //刷新当前页面
+                    location.reload();
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

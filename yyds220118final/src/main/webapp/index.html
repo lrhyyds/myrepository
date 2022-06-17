@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="个人开发学习" />
+    <meta name="description" content="个人开发学习" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人开发学习网站</title>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <!--<script src="./layui/layui.js"></script>-->
+    <script src='./js/libs/jquery.js'></script>
+    <script src="js/vue3.js"></script>
+    <script src="js/jquery3.3.1.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <!-- 公共样式CSS -->
+    <link rel="stylesheet" href="./css/common.css">
+    <!-- 首页样式 -->
+    <link rel="stylesheet" href="./css/index.css">
+
+</head>
+
+<body>
+<!-- 头部  公共的 -->
+<header id="header">
+    <!-- 头,顶部 start -->
+    <div class="header" id="thisusers">
+        <div class="center">
+            <!--头部左-->
+            <div class="left">
+                <a href="#">
+                   欢迎来到我的个人开发网站
+                </a>
+            </div>
+            <!--头部右-->
+            <div class="right">
+                <ul>
+                    <li id="isLogin"> </li>
+                    <li> <a href="cart.html">我的购物车</a></li>
+              <!--      <li> <a href="javascript:void(0)">会员</a></li>
+                    <li> <a href="javascript:void(0)">甄选家</a></li>
+                    <li class="dropMeun">
+                        <a href="javascript:void(0)" class="iconfont">企业采购 &#xe61b</a>
+                        <ul>
+                            <li><a href="javascript:void(0)">企业购</a></li>
+                            <li><a href="javascript:void(0)">礼品卡</a></li>
+                            <li><a href="javascript:void(0)">联系我们</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropMeun">
+                        <a href="javascript:void(0)" class="iconfont">客户服务 &#xe61b</a>
+                        <ul>
+                            <li><a href="javascript:void(0)">在线客服</a></li>
+                            <li><a href="javascript:void(0)">帮助中心</a></a></li>
+                            <li><a href="javascript:void(0)">商务合作</a></li>
+                            <li><a href="javascript:void(0)">开放平台</a></li>
+                        </ul>
+                    </li>-->
+                    <li class="dropMeun">
+                        <a href="/index.html" class="iconfont">&#xe612 我的</a>
+                        <ul>
+                            <li><a href="#" onclick="gotoback()">个人中心</a></li>
+                            <li><a href="#" onclick="out()">退出登录</a></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- 头,顶部 end -->
+
+    <!-- 头, 搜索区域 start -->
+    <div class="search">
+        <div class="center">
+            <div class="logo">
+                <a href="index.html">logo</a>
+            </div>
+            <div class="search-btn">
+                <div class="top">
+                    <input type="text" autocomplete="off" maxlength="100">
+                    <span>搜索</span>
+                    <i></i>
+                </div>
+                <div class="bottom">
+
+                </div>
+                <ul class="search-ret">
+                </ul>
+            </div>
+            <!-- <div class="cart"> -->
+            <a class="cart" href="./cart.html">
+                <i class="gwc"></i>
+                <span class="text">购物车</span>
+            </a>
+            <!-- <i class="circle">0</i> -->
+            <!-- </div> -->
+        </div>
+    </div>
+    <!-- 头, 搜索区域 end -->
+
+    <!-- 头, nav区域 start-->
+
+    <ul class="nav center">
+        <li><a href="index.html" class="current">首页</a></li>
+     <!--   <li><a href="#">居家生活</a></li>
+        <li><a href="#">服饰鞋包</a></li>
+        <li><a href="#">美食酒水</a></li>
+        <li><a href="#">个护清洁</a></li>
+        <li><a href="#">母婴亲子</a></li>
+        <li><a href="#">运动旅行</a></li>
+        <li><a href="#">数码家电</a></li>
+        <li><a href="#">严选全球</a></li>
+        <li><a href="#">为你推荐</a></li>
+        <li><a href="#">众筹</a></li>-->
+    </ul>
+
+    <!--<ul class="nav center">
+       &lt;!&ndash; 这里暂时不删除,二级菜单不会渲染
+      <li><a href="#" class="current">首页</a></li>
+      <li>
+        <a href="#">居家生活</a>
+        <ul>
+          <li>
+            <h3 class="title">床品套件</h3>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+          </li>
+          <li>
+            <h3 class="title">被枕褥毯</h3>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+          </li>
+          <li>
+            <h3 class="title">办公家具</h3>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+          </li>
+          <li>
+            <h3 class="title">卧室家具</h3>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+          </li>
+          <li>
+            <h3 class="title">厨房电器</h3>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+          </li>
+          <li>
+            <h3 class="title">锅具清洁</h3>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+          </li>
+          <li>
+            <h3 class="title">客厅家具</h3>
+            <div class="list">
+              <p>
+                <img class="icon" src="./images/cptj.png" alt="">
+                <span>床品套件</span>
+              </p>
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">服饰鞋包</a>
+      </li>
+      <li><a href="#">美食酒水</a></li>
+      <li><a href="#">个护清洁</a></li>
+      <li><a href="#">母婴亲子</a></li>
+      <li><a href="#">运动旅行</a></li>
+      <li><a href="#">数码家电</a></li>
+      <li><a href="#">严选全球</a></li>
+      <li><a href="#">为你推荐</a></li>
+      <li><a href="#">众筹</a></li>&ndash;&gt;
+</ul>-->
+
+    <!-- 头, nav区域 end-->
+
+
+
+</header>
+
+
+<!-- 轮播图区域 -->
+<div class="swiper-container">
+
+    <div class="swiper-wrapper">
+        <a href="#">
+            <img data-img="./images/swiper1.jpg" src="" alt="">
+        </a>
+        <a href="#">
+            <img data-img="./images/swiper2.jpg" src="" alt="">
+        </a>
+        <a href="#">
+            <img data-img="./images/swiper3.jpg" src="" alt="">
+        </a>
+        <a href="#">
+            <img data-img="./images/swiper4.jpg" src="" alt="">
+        </a>
+    </div>
+
+    <!-- 上一张 下一张 -->
+    <div class="swiper-button">
+        <button class="prev"></button>
+        <button class="next"></button>
+    </div>
+
+    <!-- 分页器 -->
+    <ul class="swiper-pagination">
+        <li> </li>
+        <li> </li>
+        <li> </li>
+        <li> </li>
+    </ul>
+</div>
+
+
+<!-- 内容区域 m-newProducts -->
+<div class="m-newProducts">
+    <div class="center">
+        <!--说明部分-->
+        <div class="m-commonHeader">
+            <div class="f-left">
+                <a href="#">
+                    <h3 class="h_title">新品首发</h3>
+                </a>
+                <small class="fs-14">为你寻觅世间好物</small>
+            </div>
+            <div class="f-right">
+                <a href="#" class="fs-14">更多新品 ></a>
+            </div>
+        </div>
+        <!--图片-->
+        <div class="slickWidth">
+            <div class="box">
+             <ul id="new">
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 底部 -->
+<footer>
+    <div class="center">
+        <div class="yx-cp-m-ft1">
+            <div class="yx-cp-item">
+              <!--  <h4>客服服务</h4>
+                <div class="btn">
+                    <a href="#">
+                        <i></i>
+                        <span>在线客服</span>
+                    </a>
+                    <a href="#">
+                        <i></i>
+                        <span>用户反馈</span>
+                    </a>
+                </div>-->
+            </div>
+            <div class="yx-cp-item">
+              <!--  <h4>何为网易严选</h4>
+                <p>
+                    网易严选是深受新中产喜爱的生活方式品牌, 为消费者提供一站式、全品类、全方位的美好生活解决方案。我们通过简约、实用、舒适的美学设计, 不断带来高品质灵感好物, 陪伴3000万新中产用户「活出自己喜欢的样子」,
+                    共同倡导多元化的生活价值主张——每个人都可以把生活的选择权交还给自己。
+                </p>-->
+                <div class="ewm">
+                   <!-- <span>关注我们 :</span>
+                    <i></i>
+                    <i></i>
+                    <i></i>-->
+                </div>
+            </div>
+            <div class="yx-cp-item">
+             <!--   <h4>扫码下载严选App</h4>
+                <div><a href="#"><img data-img="./images/app.png" src="" alt=""></a></div>
+                <p>下载领大额新人红包</p>-->
+            </div>
+        </div>
+        <!-- 还有一个底部,不打算做了,没意义. 为什么提交不了-->
+        <div class="yx-cp-m-ft2"></div>
+    </div>
+</footer>
+
+<!-- 盖楼层 -->
+<div class="fixed" style="width: 220px;height: 250px;">
+ <ul style="left: 5px">
+     <li style="height: 50px; background-color: #eb7350;"><h4>个人学习开发网站</h4></li>
+     <li style="line-height: 20px; height: 140px;text-align: left;background-color: #b3e19d;">
+         &nbsp;&nbsp;&nbsp;&nbsp;该网站用于测试开发产品，不用于商业用途,欢迎同行来访,共同学习<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;本项目搭建的技术栈为。。。shiro+SpringBoot+Vue,后端管理界面为layui，而主页的界面部分使用的是纯js渲染的数据
+     </li>
+     <li style="background-color: #93D1FF;">
+
+         <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#72767b;size: 30pt;">赣ICP备2021011648号-1</a>
+     </li>
+ </ul>
+
+
+
+
+</div>
+
+<!-- jquery,动画库,自己的原生js代码 -->
+<script src="./js/libs/jquery.js"></script>
+<script src="./js/libs/animate_tools.js"></script>
+<script src="./js/index.js"></script>
+<script src="./js/common.js"></script>
+
+<!--退出登录-->
+<script>
+    layui.use(['form', 'layer','jquery'],
+        function() {
+            $ = layui.jquery;
+            var form = layui.form,
+                layer =layui.layer;});
+    function out() {
+        layer.confirm('你真的要离我而去吗?', {
+            btn: ['残忍离去', '留下'] //按钮
+        }, function () {
+            console.log("确认离去");
+            sessionStorage.clear();
+            $.post({
+                url: '/outlogin',
+                success: function (res) {
+                    console.log("接收到返回参数"+res);
+                    if (res=1) {
+                        layer.msg("欢迎下次再来",{time: 1000, shade: 0.4},function () {
+                            location.href="/index.html";
+                        });
+                    }
+                }
+            });
+        },function () {
+            layer.msg('感谢您留了下来');
+        });
+    };
+    function gotoback(){
+        console.log("进入gotoBack方法");
+        $.ajax({
+            url:'/gotoBack',
+            success:function (res){
+                location.href=res;
+            }
+        });
+    }
+</script>
+
+</body>
+
+</html>

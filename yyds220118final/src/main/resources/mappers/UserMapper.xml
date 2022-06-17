@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nb.yyds220118.dao.IUserDao">
+    <!--获取所有用户信息-->
+    <select id="users" resultType="users">
+        select * from users natural join userinfo
+    </select>
+    <select id="likeUsers" resultType="users">
+        select * from users natural join userinfo where uname like '%${uName}%'
+    </select>
+
+
+    <!--通过编号获取用户所有信息-->
+    <select id="getUserByNo1" resultType="users">
+        select * from users natural join userinfo where UNO=#{uNo}
+    </select>
+    <!--修改密码-->
+    <update id="updateUserPWD">
+        update users set UPASSWORD=#{upassword} where UNO=#{uno}
+    </update>
+    <!--更新用户信息-->
+    <update id="updateUserInfo">
+        update userinfo
+        set USEX=#{uSex},UBIRTHDAY=#{uBirthday},UIDENTITYCODE=#{uIdentityCode} where UNO=#{uNo}
+    </update>
+    <!--修改昵称-->
+    <update id="updateUserName">
+        update users set UNAME=#{uname} where UNO=#{uno}
+    </update>
+    <!--修改手机号-->
+    <update id="updateUserPhone">
+        update users set UPHONE=#{uphone} where UNO=#{uno}
+    </update>
+    <!--修改用户状态-->
+    <update id="updateUserStatus">
+        update users set USTATUS=#{ustatus} where UNO=#{uno}
+    </update>
+    <!--用户充值-->
+    <update id="updateUserInfoMoney">
+        update userinfo set UMONEY=UMONEY+#{umoney} where UNO=#{uno}
+    </update>
+    <!--用户消费-->
+    <update id="updateUserInfoMoneyPay">
+        update userinfo set UMONEY=UMONEY-#{umoney} where UNO=#{uno}
+    </update>
+    <!--增加用户地址-->
+    <insert id="addUserAddress">
+        insert into useraddress (UNO, UCONSIGNEE, URECEIVINGPHONE, UADDRESS)
+        values (#{uNo},#{uConsignee},#{uReceivingPhone},#{uAddress})
+    </insert>
+    <!--修改用户地址-->
+    <update id="updateUserAddress">
+        update useraddress
+        set UCONSIGNEE=#{uConsignee},URECEIVINGPHONE=#{uReceivingPhone},UADDRESS=#{uAddress}
+        where AID=#{aId}
+    </update>
+    <!--删除用户地址-->
+    <delete id="delUserAddress">
+        delete from useraddress where AID=#{aid}
+    </delete>
+    <!--查询用户地址-->
+    <select id="getUserAddress" resultType="userAddress">
+        select * from useraddress where uno=#{uno}
+    </select>
+    <select id="likeUser">
+        select * from users natural join userinfo where UNAME like  concat('%', concat(#{uName}, '%'));
+    </select>
+    <!--用户增加留言-->
+    <insert id="addComments">
+        insert into comments(uno, ccontent, ccreattime) values (#{uNo},#{cContent},#{cCreatTime})
+    </insert>
+    <!--留言查询-->
+    <select id="selMessage" resultMap="Mess">
+        select * from comments where uno=#{uno}
+    </select>
+    <resultMap id="Mess" type="comments">
+        <result property="cId" column="cid"></result>
+        <association property="rContent" column="cid" select="getMess"></association>
+        <association property="rTime" column="cid" select="getTime"></association>
+    </resultMap>
+    <select id="getMess" resultType="String">
+        select rcontent from commentreply where cid=#{cid}
+    </select>
+    <select id="getTime" resultType="String">
+        select RTIME from commentreply where cid=#{cid}
+    </select>
+
+
+    <!--liu-->
+    <!--注册用户-->
+    <insert id="addUsers">
+        insert into users (uphone,upassword,uname) values (#{uPhone},#{uPassword},#{uName});
+    </insert>
+    <!--增加用户信息-->
+    <insert id="addUserInfo">
+        insert into userinfo(uno) values (#{uno})
+    </insert>
+    <!--增加用户角色-->
+    <insert id="addUserRole">
+        insert into userrole(uno) values (#{uno})
+    </insert>
+    <!--通过phone得到用户-->
+    <select id="getUserByPhone" resultType="users">
+        select * from users where uphone=#{phone} and ustatus=1
+    </select>
+    <!--通过uno得到用户及所有金额-->
+    <resultMap id="usersMoney" type="users">
+        <id property="uNo" column="uno"></id>
+        <collection property="uMoney" column="uno" select="getUserMoney"/>
+    </resultMap>
+    <!--通过uno得到用户-->
+    <select id="getUserByUno" resultMap="usersMoney">
+        select * from users where uno=#{uno}
+    </select>
+    <!--得到用户的余额-->
+    <select id="getUserMoney" resultType="Double">
+        select umoney from userinfo where uno=#{uno}
+    </select>
+    <!--扣钱-->
+    <update id="reduceMoney">
+        update userinfo set umoney=umoney-#{cost} where uno=#{uno}
+    </update>
+
+    <!--增加订单-->
+    <insert id="addOrder">
+        insert into orders(uno,ophone,oname,oaddress,ocreattime,ocost) values (#{uNo},#{oPhone},#{oName},#{oAddress},#{oCreatTime},#{oCost})
+    </insert>
+  <select id="getpaymaxoid" resultType="Integer">
+      select max(oid) from orders
+  </select>
+    <!--增加订单项-->
+    <insert id="addOrderItem">
+        insert into orderitem(onum,omoney,pid) values (#{oNum},#{oMoney},#{pId})
+    </insert>
+
+    <!--增加订单项Jq-->
+    <insert id="addOrderItemJq">
+        insert into orderitem(oid,onum,omoney,pid) values (#{oId},#{oNum},#{oMoney},#{pId})
+    </insert>
+
+    <!--删除购物车信息-->
+    <delete id="delShoppingCar">
+        delete from shoppingcar where   carid=#{carid} and uno=#{uno} and pid=#{pid}
+    </delete>
+    <!--进入后台 判断身份-->
+    <select id="checkRole" resultType="String">
+        select rolename from users u,userrole ur,role r where u.uno=ur.uno and ur.roleid=r.roleid and u.uno=#{uno}
+    </select>
+    <select id="getumoney" resultType="Double">
+        select umoney from userinfo where uno=#{uno}
+    </select>
+</mapper>

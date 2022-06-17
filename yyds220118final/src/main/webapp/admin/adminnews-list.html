@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.2</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/xadmin.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/xadmin.js"></script>
+    <script src="../js/jquery3.3.1.min.js"></script>
+    <script src="../js/vue3.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+<div  class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a href="">演示</a>
+                <a>
+                    <cite>导航元素</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div id="container" class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+
+
+                    </form>
+                </div>
+                <div class="layui-card-header">
+                    <button class="layui-btn layui-btn-danger" onclick="aa()">
+                        <i class="layui-icon"></i>批量删除</button>
+                    <button class="layui-btn" onclick="window.location.reload()">
+                        <i class="layui-icon" ></i>未发布新闻</button>
+                    <button class="layui-btn" @click="checked(2)">
+                        <i class="layui-icon" ></i>已发布新闻</button>
+                    <button class="layui-btn" @click="checked(3)">
+                        <i class="layui-icon" ></i>黑名单新闻</button>
+                    <button class="layui-btn" @click="toadd()">
+                        <i class="layui-icon" ></i>增加新闻</button></div>
+                <!--未发货表格页面开始-->
+                <div class="layui-card-body " >
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" name="" lay-skin="primary" id="aagroup">
+                            </th>
+                            <th>序号</th>
+                            <th>新闻状态</th>
+                            <th>新闻编号</th>
+                            <th>录入时间</th>
+                            <th>新闻标题</th>
+                            <th>新闻内容</th>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(t,index) in news">
+                            <td>
+                                <input type="checkbox" name="aasigle" lay-skin="primary" class="cb" :value="t.nid">
+                            </td>
+                            <td>{{(cpage-1)*10+index+1}}</td>
+                            <td>
+                            <span v-if="t.nestatus==1">未发布</span>
+                            <span v-if="t.nestatus==2">已发布</span>
+                            <span v-if="t.nestatus==3">不合格</span></td>
+                            <td>{{t.nid}}</td>
+                            <td>{{t.ncreatTime}}</td>
+                            <td>{{t.ntitle}}</td>
+                            <td style="width: 450px;height: 60px">{{t.ncontent}}</td>
+                            <td class="td-manage">
+                                <div name="statusDiv" v-if="t.nestatus==1">
+                               <button  name="status"  style="float: left" class="layui-btn" @click="update(2,t.nid)" >
+                                   <i class="layui-icon"></i>发布</button>
+                                  <button  name="status" style="float: left"  class="layui-btn"  @click="update(3,t.nid)">
+                                      <i class=layui-icon" ></i>不合格</button>
+                                </div>
+                                <div name="statusDiv" v-if="t.nestatus==2">
+                                    <button  name="status" class="layui-btn" >
+                                        <i class="layui-icon"></i>已发布</button>
+                                </div>
+                                <div name="statusDiv" v-if="t.nestatus==3">
+                                    <button  name="status" class="layui-btn" >
+                                        <i class="layui-icon"></i>不合格新闻</button>
+                                </div>
+                            </td>
+                            </p>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!--未发货表格页面结束-->
+                <div class="layui-card-body ">
+                    <div class="page">
+                        <div >
+                            <a  @click="go(1)" >首页</a>
+                            <a  @click="go(2)" href="javascript:">上一页</a>
+                            <a  @click="go(3)" href="javascript:">下一页</a>
+                            <a @click="go(4)" href="javascript:">末页</a>
+                            <a class="num" href="javascipt:" >{{cpage}}/{{tpage}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display: none" id="toadd">
+    <form class="layui-form" id="newsform" action="" style="width: 500px;height: 400px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">新闻标题</label>
+            <div class="layui-input-block">
+                <input type="text" id="new1" name="nTitle" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">新闻内容</label>
+            <div class="layui-input-block">
+                <textarea id="new2" name="nContent" placeholder="请输入内容" class="layui-textarea" style="height: 300px"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button"  @click="add()">立即增加</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+    </div>
+
+</div>
+<!--container结束-->
+</body>
+<script>
+    layui.use('table',function () {
+        var table =layui.table;
+        table.render();
+    })
+</script>
+<!--实现全选功能-->
+<script type="text/javascript">
+    window.onload = function() {
+        var btn = document.getElementById("aagroup");
+        btn.onclick = function() {
+            var flag = this.checked;
+            var items = document.getElementsByName("aasigle");
+            for (var i = 0; i < items.length; i++) {
+                items[i].checked = flag;//将所有item的状态设为全选按钮的状态
+            }
+        }
+
+
+        var items = document.getElementsByName("aasigle");
+        for (var i = 0; i < items.length; i++) {
+            items[i].onclick = function() {//对每个item设置点击
+                var number = 0;//记录选中的个数
+                for (var j = 0; j < items.length; j++) {
+                    if (items[j].checked) {
+                        number++;
+                    }
+                }
+                document.getElementById("aagroup").checked = (items.length == number);
+            }
+        }
+    }
+</script>
+<!--实现批量删除功能-->
+<script>
+     function aa(){
+         confirm("确认删除所有新闻吗");
+        var inp=$(".cb");
+        var inpvaule=new Array();//定义一个变量存放被选数据的id
+        for (var i = 0; i <inp.length ; i++) {
+            if($(inp[i]).prop("checked")==true){//如果被选中
+               inpvaule.push(inp[i].value);
+                //$(inp[i]).prop("checked",this.checked);
+                console.log(inp[i]);
+            }
+        }
+        console.log(inpvaule);
+         $.post(//发送请求，批量删除
+             "/delbatchnews",
+             {"inpvaule":inpvaule},
+              function (res) {
+                if(res!=0){
+                    layer.msg("删除成功");
+                    window.location.reload();
+                }
+              }
+         )
+     }
+</script>
+<script>
+    const app={
+        data(){
+            return {
+                pageInfo:null,
+                cpage:null,
+                tpage:null,
+                limit:null,
+                news:null//新闻
+            }
+        },
+        //自定义事件
+        methods:{
+            /*
+            * 增加新闻弹窗
+            * */
+            toadd(){
+                layer.open({
+                    type:1,
+                    content:$("#toadd"),
+                    area:['600px','500px']
+                })
+            },
+            /*
+            * 执行增加新闻
+            * */
+            add(){
+                var ttile=$("#new1").val();
+                console.log(ttile);
+                var content=$("#new2").val();
+                console.log(content);
+
+                if(ttile==null||ttile==""){
+                    layer.msg("请填写标题");
+                    return;
+                }if(content==null||content==""){
+                    layer.msg("请补充新闻内容！");
+                    return;
+                }else {
+                    $.ajax({
+                        url: "/addnews",
+                        data: $("#newsform").serialize(),
+                        success: function (res) {
+                            if (res == 1) {
+                                layer.close(layer.index);
+                                layer.msg("增加成功");
+                                window.location.reload();
+                            } else {
+                                layer.msg("增加失败");
+                            }
+                        }
+                    })
+                }
+              //  return false;
+            },
+            //设为发布新闻
+            update(id,nid){
+                $.ajax({
+                    url:"/updatenestatus",
+                    data:{"status":id,"nid":nid},
+                    success:function (res) {
+                        if(res==1){
+                            layer.msg("修改成功");
+                         //   window.location.reload();
+                            window.location.reload();
+                        }
+                    }
+
+                })
+                return false;
+            },
+
+            //根据状态查询新闻
+            checked(checkid){
+                var _self=this;
+                console.log("请求新闻的状态："+checkid)
+                $.post(
+                    "/getnewsBynestatus",
+                    {"page":_self.cpage,"limit":_self.limit,"status":checkid},
+                    function (res) {
+                        _self.pageInfo=res;
+                        _self.news=res.list;
+                        _self.cpage=res.pageNum;
+                        _self.tpage=res.pages;
+                        console.log(_self.news);
+                        layer.reload();
+                    }
+                )
+
+            },
+
+        },
+        //加载事件
+        mounted:function () {
+                    var _self=this;
+                    $.post(
+                        "/getnewsBynestatus",
+                        {"page":_self.cpage,"limit":_self.limit,"status":_self.status},
+                        function (res) {
+                              _self.pageInfo=res;
+                              _self.news=res.list;
+                              _self.cpage=res.pageNum;
+                              _self.tpage=res.pages;
+                              console.log(_self.news);
+
+                        }
+
+                    )
+        }
+    }
+    var vue=Vue.createApp(app);
+    vue.mount("#container");
+</script>
+</html>

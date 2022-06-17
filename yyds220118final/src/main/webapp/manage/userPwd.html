@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="../layui/css/layui.css">
+  <script src="../layui/layui.js"></script>
+  <script src="../layui/layui.all.js"></script>
+  <script src="../js/jquery3.3.1.min.js"></script>
+</head>
+<style> 
+  #contaniner{
+    width: 100%;
+    height: 1000px;
+    background: #FFFFFF;
+  }
+  #editPwdDiv{
+    padding-top: 30px;
+  }
+</style>
+<body>
+<div id="contaniner">
+<!--修改密码-->
+<div id="editPwdDiv">
+  <form class="layui-form" id="usersPwdForm">
+    <div class="layui-form-item">
+      <label class="layui-form-label">原密码</label>
+      <div class="layui-input-inline">
+        <input type="password" name="oriPWD" id="oriPWD" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">新的密码</label>
+      <div class="layui-input-inline">
+        <input type="password" name="newPWD" id="newPWD" onchange="confirmJudge()" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">确认密码</label>
+      <div class="layui-input-inline">
+        <input type="password" name="confirmPwd" id="confirmPwd" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block"><!--lay-submit lay-filter="pwdForm"-->
+        <button class="layui-btn" onclick="submitPwd()" type="button"  id="pwdBtn" >立即提交</button>
+      </div>
+    </div>
+    <script>
+      function confirmJudge(){
+        let newPwd=$("input[name='newPWD']").val();
+        if (newPwd.length<5||newPwd.length>16){
+          layer.tips('新密码长度应在6-16位字符之间，请重新输入', '#newPWD');
+        }
+      }
+      function submitPwd(){
+        let newPWD=$("input[name='newPWD']").val();
+        let confirmPwd=$("input[name='confirmPwd']").val();
+        if (newPWD!=confirmPwd){
+          layer.tips('两次密码不一致，请重新输入', '#confirmPwd');
+
+        }else if (newPWD.length<6||newPWD.length>16){
+          layer.tips('新密码长度应在6-16位字符之间，请重新输入', '#newPWD');
+        } else if (newPWD==confirmPwd) {
+          $.ajax({
+            url:"/updateUserPWD",
+            data:$("#usersPwdForm").serialize(),
+            success:function (res){
+              if (1==res){
+                layer.msg("修改成功")
+              }else if (0==res){
+                layer.msg('原密码错误', function(){
+
+                });
+              }else {
+                layer.msg('修改失败', function(){
+                });
+              }
+            }
+          })
+        }
+      }
+    </script>
+
+  </form>
+
+</div>
+</div>
+</body>
+</html>

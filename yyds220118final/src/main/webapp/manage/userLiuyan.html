@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../layui/layui.all.js"></script>
+    <script src="../layui/layui.js"></script>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="../js/jquery3.3.1.min.js"></script>
+</head>
+<style>
+    #contaniner{
+        background-color: #FFFFFF;
+        width: 100%;
+        height: 1000px;
+    }
+</style>
+<body>
+<div id="contaniner">
+    <table id="myAddr"  lay-filter="test"></table>
+    <script>
+        layui.use('table', function(){
+            var table = layui.table;
+            //执行渲染
+            table.render({
+                elem: '#myAddr' //指定原始表格元素选择器（推荐id选择器）
+                ,url:"/selMessage"   //数据地址
+                ,height: 400 //容器高度
+                ,page:true  //开启分页
+                ,cols: [[
+                    {field: 'no', title: '编号',type:"numbers", width:80, fixed: 'left'}
+                    ,{field: 'uno', title: 'aid', width:80, hide:true }   //隐藏ID
+                    ,{field: 'cid', title: 'cid', width:80}   //隐藏ID
+                    ,{field: 'ccontent', title: '留言内容', width:300,}
+                    ,{field: 'ccreatTime', title: '留言时间', width:300,}
+                    ,{field: 'rcontent', title: '回复内容', width:180}
+                    ,{field: 'rtime', title: '回复时间', width:180}
+
+                ]] //设置表头
+            });
+
+        });
+    </script>
+
+    <div class="layui-form-item">
+        <button class="layui-btn layui-btn" lay-submit lay-filter="addformDemo" onclick="addAddrbtn()">增加留言</button>
+    </div>
+
+
+    <!--增加地址弹窗触发-->
+    <script>
+        function addAddrbtn(){
+            layer.open({//页面层
+                type: 1,
+                area: ['500px', '280px'], //宽高
+                content: $('#addAddrdiv'),
+                offset: '100px',
+                title:'增加留言'
+            });
+        };
+    </script>
+    <!--添加地址的弹窗-->
+    <div id="addAddrdiv" style="display: none">
+        <form class="layui-form" id="addaddrform">
+
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">留言内容</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="ccontent" style="width: 300px"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" id="submitadd" onclick="submitAdd()">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--增加留言-->
+    <script>
+        function submitAdd(){
+            $.post({
+                url:"/addUserLiuyan",
+                data:$("#addaddrform").serialize(),
+                success:function (res){
+                    if (1==res){
+                        layer.close(loadIndex);
+                        location.reload();//刷新当前页面
+                    }else {
+                        layer.msg("留言失败")
+                        layer.close(loadIndex);
+                    }
+                }
+            })
+        }
+    </script>
+    <!--摆烂了-->
+</div>
+</body>
+</html>

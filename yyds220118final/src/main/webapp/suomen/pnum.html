@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品销量排名</title>
+
+    <!-- ../ 表示当前路径的上一层路径
+        /表示从根路径开始查找
+      -->
+    <script src="../layui/layui.js"></script>
+    <!--<script src="../js/vue3.js"></script>-->
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="/js/jquery3.3.1.min.js"></script>
+</head>
+<body>
+
+<table class="layui-table" lay-data="{width: 1000, height:550, url: '../desc', page:true, id:'idTest'}" lay-filter="demo">
+    <thead>
+    <tr>
+        <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+        <th lay-data="{field:'pppage', width:80}">排名</th>
+        <th lay-data="{field:'pname', width:250, sort: true}">商品名称</th>
+<!--        <th lay-data="{field:'pfilename', width:95, sort: true}">商品图片</th>-->
+        <th lay-data="{field:'pprice', width:100, sort: true}">商品价格</th>
+        <th lay-data="{field:'pnum', width:80, sort: true}">库存</th>
+        <th lay-data="{field:'psoldnum', width:110, sort: true}">销售数量</th>
+        <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}"></th>
+    </tr>
+    </thead>
+</table>
+<!--遍历得到某个属性值-->
+<script type="text/html" id="productstype">
+    {{# layui.each(d.productstype, function(index, item){     }}
+    <span class="layui-badge layui-bg-blue">{{ item.tname}}</span>
+    {{# });  }}
+
+</script>
+<!--<script type="text/html" id="barDemo">-->
+<!--    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+<!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+<!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+<!--</script>-->
+
+<script>
+    //加载模块
+    layui.use(['table','form'], function(){
+        var table = layui.table;
+        var form = layui.form;
+        //监听表格复选框选择
+        table.on('checkbox(demo)', function(obj){
+            console.log(obj)
+        });
+        //监听工具条
+        table.on('tool(demo)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                layer.msg('ID：'+ data.id + ' 的查看操作');
+            } else if(obj.event === 'del'){
+
+                layer.confirm('真的删除行么', function(index){
+                    $.post("/del", {"pid":data.pid}, function(res){
+                        if (0 == res){ //删除成功
+                            obj.del()
+                        }
+                        else{
+                            layer.msg("删除失败！未知异常！");
+                        }
+                        layer.close(index); //关闭确认删除窗口
+                    })
+
+
+                });
+            } else if(obj.event === 'edit'){
+                layer.alert('编辑行：<br>'+ JSON.stringify(data))
+            }
+        });
+
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                // layer.alert(JSON.stringify(data));
+                console.log(data)//浏览器的检查里面的控制台窗口
+                var loadIndex;
+                $.ajax({
+                    url: "/del",
+                    type:"post",
+                    data:JSON.stringify(data),//参数
+                    contentType:"application/json",
+                    beforeSend:function(){
+                        loadIndex = layer.load(2);
+                    },
+                    success:function(res){
+                        if (0 ==res){
+                            layer.close(loadIndex);
+                            //刷新当前页面
+                            location.reload();
+                        }
+                    }
+                });
+            }
+            ,getCheckLength: function(){ //获取选中数目
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                layer.msg('选中了：'+ data.length + ' 个');
+            }
+            ,isAll: function(){ //验证是否全选
+                var checkStatus = table.checkStatus('idTest');
+                layer.msg(checkStatus.isAll ? '全选': '未全选')
+            }
+            ,add:function(){
+                $.post("/protype", function(productstype){
+                    console.log(productstype);
+                    let html = "";
+                    for (let i = 0; i < productstype.length;i++){
+                        html += `<input type="radio" name="tid" title="`;
+                        html += productstype[i].tname;
+                        html+= `" value="`;
+                        html+= productstype[i].tid;
+                        html += `">`;
+                    }
+                    $("#rolesa").html(html);
+                    form.render();  //刷新layui的表单
+                    layer.open({
+                        //1表示弹出一个本页面的层DIV
+                        //2表示弹出一个新的独立的页面iframe
+                        type:1,
+                        content:$("#add"),
+                        area:['600px', '600px']
+                    });
+                })
+            }
+            ,update:function(){
+                layer.open({
+                    //1表示弹出一个本页面的层DIV
+                    //2表示弹出一个新的独立的页面iframe
+                    type:1,
+                    content:$("#update")
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+
+<div id="add" style="display:none;width:550px;height:350px;">
+    <form class="layui-form" id="proform">
+        <table border="0">
+            <tr  height="60">
+                <td>商品名称：</td>
+                <td><input name="pname" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="60">
+                <td width="20">商品价格：</td>
+                <td><input name="pprice" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="60">
+                <td width="20">商品库存：</td>
+                <td><input name="pnum" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="60">
+                <td width="20">商品类型：</td>
+                <td id="rolesa"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <button onclick="add()"
+                            class="layui-btn" type="button">
+                        提交
+                    </button></td>
+            </tr>
+        </table>
+
+
+    </form>
+</div>
+
+<div id="update" style="display:none;width:500px;height:300px;">
+    <form id="proform1">
+        <table border="0">
+            <tr  height="50">
+                <td>商品ID：</td>
+                <td><input name="pid" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr  height="50">
+                <td>商品名称：</td>
+                <td><input name="pname" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="50">
+                <td>商品价格：</td>
+                <td><input name="pprice" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr height="50">
+                <td>商品库存：</td>
+                <td><input name="pnum" type="text"
+                           class="layui-input-inline"
+                           style="width:100px;"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button onclick="update()"
+                            class="layui-btn" type="button">
+                        提交
+                    </button></td>
+            </tr>
+        </table>
+
+
+    </form>
+</div>
+<script src="/js/jquery3.3.1.min.js"></script>
+<script>
+    function  add() {
+        var loadIndex;
+        $.ajax({
+            url:"/add",
+            data:$("#proform").serialize(),//序列化
+            beforeSend:function(){
+                loadIndex = layer.load(2);
+            },
+            success:function(res){
+                if (0 ==res){
+                    layer.close(loadIndex);
+                    //刷新当前页面
+                    location.reload();
+                }
+            }
+        });
+    }
+    function  update() {
+        var loadIndex;
+        $.ajax({
+            url:"/update",
+            data:$("#proform1").serialize(),//序列化
+            beforeSend:function(){
+                loadIndex = layer.load(2);
+            },
+            success:function(res){
+                if (0 ==res){
+                    layer.close(loadIndex);
+                    //刷新当前页面
+                    location.reload();
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

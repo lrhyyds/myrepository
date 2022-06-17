@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <script type="text/javascript" src="../scripts/function-manage.js"></script>
+        <link href="../lib/layui/css/layui.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="../css/font.css">
+        <link rel="stylesheet" href="../css/xadmin.css">
+        <script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script src="../lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+    </head>
+    <style>
+        .layui-table-cell {
+            height: 100%;
+            max-width: 100%;
+            width: 100%;
+            text-align: center;
+        }
+        .bu{
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: #ce0520;
+        }
+        .num{
+            width: 50px;
+        }
+
+    </style>
+</head>
+<body>
+<!--头部导航-->
+<div class="x-nav">
+    <!--左边进度条-->
+    <span class="layui-breadcrumb">
+        <a><cite>我的易买网</cite></a>
+        <a><cite>购物车</cite></a>
+    </span>
+    <!--右边刷新按钮-->
+    <a class="layui-btn layui-btn-small"
+       style="line-height:1.6em;margin-top:2px; margin-bottom:2px; float:right"
+       onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+
+<!--内容-->
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <!--内容头部 删除不需要的商品-->
+                    <div class="layui-btn-group demoTable">
+                        <button class="layui-btn" data-type="delChecked">删除选中</button>
+                    </div>
+                    <!--实际内容-->
+                    <div class="main">
+                        <div class="manage">
+                            <!--商品信息表 获取所有已加入购物车的商品-->
+                            <table class="layui-table"
+                                   lay-data="{width: 1050,limit:3,limits:[1,2,3,5,10], height:560, url:'/getMyShoppingCar', page:true, id:'idTest'}"
+                                   lay-filter="demo">
+                                <thead>
+                                <!--字段-->
+                                <tr>
+                                    <th lay-data="{type:'checkbox',width:60, fixed: 'left',style:'height:150px'}">全选</th>
+                                    <th lay-data="{width:80, sort: true, fixed: true,style:'height:150px,line-height:150px',templet:function(d){return d.LAY_INDEX;}}">编号</th>
+                                    <th lay-data="{field:'pfileName', width:130,templet:'#picture',style:'height:150px,line-height:150px'}" >图片</th>
+                                    <th lay-data="{field:'pname', width:235}">商品名</th>
+                                    <th lay-data="{field:'pprice', width:100, templet:'#totalpprice'}">花费/元</th>
+                                    <th lay-data="{field:'pnum', width:100}">库存/件</th>
+                                    <th lay-data="{field:'psoldnum', width:100}">销量/件</th>
+                                    <th lay-data="{field:'userpaynum', width:100,}" >购买数量</th>
+                                    <th lay-data="{field:'carid', width:50,hidden:true}" ></th>
+                                    <th lay-data="{field: 'num', width:100}">
+                                        <!--减少按钮-->
+                                        <button  onclick="down(this)" type="button" class="layui-btn layui-btn-sm layui-btn-primary">
+                                            <i class="layui-icon layui-icon-left"></i>
+                                        </button>
+                                        <!--购买数量-->
+                                        <input name="num" class="num" onchange="changenum(this)" type="number layui-btn" value="1" style="width: 42px;height: 28px">
+                                        <!--库存量 隐藏-->
+                                        <input name="pnum" type="hidden" value="{{d.pnum}}">
+                                        <!--增加按钮-->
+                                        <button onclick="up(this)" type="button" class="layui-btn layui-btn-sm layui-btn-primary">
+                                            <i class="layui-icon layui-icon-right"></i>
+                                        </button></th>
+
+                                </tr>
+                                </thead>
+                            </table>
+                            <!--商品结算按钮-->
+                            <div class="layui-btn-group demoTable" style="margin-left:500px;">
+                                <button class="layui-btn"  data-type="pay">结算</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--显示改订单支付金额-->
+<script type="text/html" id="totalpprice">
+    <span class="layui-badge layui-bg-blue">{{d.pprice*d.userpaynum}}</span>
+
+</script>
+<!--显示图片-->
+<script type="text/html" id="picture">
+    <div><img style="height:100px;width:100px;line-height:100px!important;"  src="/images/product/{{d.pfileName}}" class="layui-upload-img"/></div>
+</script>
+
+<!--数量按钮-->
+<!--<script  type="text/html" id="button">
+    <div>
+        &lt;!&ndash;减少按钮&ndash;&gt;
+        <button  onclick="down(this)" type="button" class="layui-btn layui-btn-sm layui-btn-primary">
+            <i class="layui-icon layui-icon-left"></i>
+        </button>
+        &lt;!&ndash;购买数量&ndash;&gt;
+        <input name="num" class="num" onchange="changenum(this)" type="number layui-btn" value="1" style="width: 42px;height: 28px">
+        &lt;!&ndash;库存量 隐藏&ndash;&gt;
+        <input name="pnum" type="hidden" value="{{d.pnum}}">
+        &lt;!&ndash;增加按钮&ndash;&gt;
+        <button onclick="up(this)" type="button" class="layui-btn layui-btn-sm layui-btn-primary">
+            <i class="layui-icon layui-icon-right"></i>
+        </button>
+    </div>
+</script>-->
+
+<!--弹出地址信息框-->
+<div id="address" style="display: none">
+    <div id="checkAddress"></div>
+</div>
+
+<!--弹出添加地址框-->
+<div id="addAddressDiv" style="display: none">
+    <div style="margin-left: 100px; margin-top: 10px">
+        地址:<input type="text" id="Aaddress" style="width: 180px" class="layui-input"/></br>
+        收货人:<input type="text" id="Aname" style="width: 180px" class="layui-input"/></br>
+        联系电话:<input type="text" id="Aphone" style="width: 180px" class="layui-input"/></br>
+        <input type="button" class="layui-btn" onclick="AddAddress()" value="确定"/></br>
+    </div>
+</div>
+
+<!--调用的方法-->
+<script>
+    /*
+    * 要传递的参数
+    * */
+    var productsnum=new Array();
+    var productpis=new Array();
+    var productcheck=new Array();
+    var productcost=new Array();
+    var carids=new  Array();
+    //增加商品数量
+    function up(obj) {
+        var thisnum=$(obj).parent().children(".num").val();
+        thisnum++;
+        console.log(thisnum)
+        var gg=$(obj).parent();
+        console.log("gg"+gg);
+        var thispnum=$("input[name='pnum']").val();
+        if (thisnum>thispnum){
+            layer.alert("库存不足");
+        }
+        if (thisnum>=1){
+            $(obj).parent().children(".num").val(thisnum);
+            num++;
+            console.log(num);
+        }
+    }
+    //减少商品数量
+    function down(obj) {
+        var thisnum=$(obj).parent().children(".num").val();
+        thisnum--;
+        console.log(thisnum)
+        var thispnum=$("input[name='pnum']").val();
+        if (thisnum>thispnum){
+            layer.alert("库存不足");
+        }
+        if (thisnum>=1){
+            $(obj).parent().children(".num").val(thisnum);
+            num--;
+            console.log(num);
+        }
+    }
+    //直接改变商品数量
+    function changenum(obj){
+        var thispnum=$(obj).parent().children(".pnum").val();
+        let thisnum=$(obj).val();
+        if(parseInt(thisnum)>parseInt(thispnum)){
+            layer.alert("库存不足！")
+        }
+        if(parseInt(thisnum)<=0||thisnum.indexOf(".")>=0){
+            layer.alert("格式错误！请输入大于零的整数");
+            $(obj).val(1);
+        }
+        num=thisnum;
+        console.log(num);
+    }
+    //增加收货地址
+    function AddAddress() {
+        layer.closeAll();
+        $.post("/getUserByUno",function (user) {
+            //获取当前登录的用户的信息
+            var uNO=(user.uno);
+            var uConsignee=$("#Aname").val();
+            var uReceivingPhone=$("#Aphone").val();
+            var uAddress=$("#Aaddress").val();
+            //增加地址
+            $.post("/addUserAddress",{"uNO":uNO,"uConsignee":uConsignee,
+                "uReceivingPhone":uReceivingPhone,"uAddress":uAddress},function (count) {
+                if (count!=0){
+                    layer.alert("增加成功!",function () {
+                        location.reload();
+                    });
+                }
+                else {
+                    layer.alert("增加失败!",function () {
+                        location.reload();
+                    });
+                }
+
+            })
+        })
+    }
+    //购买的方法
+    function payment() {
+        $.post("/getUserByUno",function (user) {
+            //获得用户编号
+            var uno=user.uno;
+            //console.log("uno"+uno);
+            var addressInfoAll=($("input[name='addressInfo']").val());
+            var url=window.location.href;
+            //console.log("url"+url);
+            $.post("/paymentjq",
+                {
+                    "addressInfoAll": addressInfoAll,
+                    'productnum': productsnum,
+                    'productpis': productpis,
+                    'productcheck': productcheck,
+                    'productcost': productcost,
+                    'carids':carids
+                }, function (res) {
+                    if (res == 1) {
+                    layer.msg("购买成功!",{time:1000},function () {
+                        location.reload();
+                    });
+                }
+                else {
+                    layer.alert("购买失败!",{time:1500},function () {
+                        location.reload();
+                    });
+                }
+            });
+
+        });
+    }
+    /*没有收获地址时 点击增加收货地址*/
+    function addAddress() {
+        $.post("/getUserByUno", function (user) {
+            layer.closeAll();
+            var uno = (user.uno);
+            layer.open({
+                title: "增加收货地址",
+                type: 1,
+                content: $('#addAddressDiv')
+                , area: ['500px', '500px']
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+            });
+        });
+    }
+
+    layui.use(['jquery','layer','table','form'],function(){
+        $=layui.jquery
+            ,layer=layui.layer
+            ,form=layui.form
+            ,table=layui.table
+
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+            ,getCheckLength: function(){ //获取选中数目
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                layer.msg('选中了：'+ data.length + ' 个');
+            }
+            ,isAll: function(){ //验证是否全选
+                var checkStatus = table.checkStatus('idTest');
+                layer.msg(checkStatus.isAll ? '全选': '未全选')
+            }
+            //删除选中
+            ,delChecked:function () {
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                if(data==""){
+                    layer.alert("还未选择商品！");
+                    return false;
+                }
+                $.ajax({
+                    data:JSON.stringify(data),
+                    url:"/delCheckedProducts",
+                    type:"post",
+                    contentType:"application/json;charset=utf-8",
+                    dataType:"json",
+                    success:function(count){
+                        if (count!=0){
+                            layer.msg("删除成功！",{time:600},function () {
+                                location.reload();
+                            })
+                        }
+                        else {
+                            layer.msg("删除失败哦！",{time:600},function () {
+                                location.reload();
+                            })
+                        }
+
+                    }
+                })
+            }
+            //购买功能
+            ,pay:function () {
+                /*判断用户是否选择了商品*/
+                var checkStatus=table.checkStatus('idTest');
+                var data=checkStatus.data;
+                //console.log("获取到的所有数据"+data.);
+                if (data==null||data==""){
+                    layer.alert("您还没有选择商品哦!")
+                    return false;
+                }
+                /*获取所需支付的总金额数*/
+                var money=0;
+                for (let i=0;i<data.length;i++){
+                    //将一个订单的价格存在数组中,一个订单的价格=商品单价+商品数量
+                    productcost[i]=data[i].pprice*data[i].userpaynum;
+                    money+=data[i].pprice*data[i].userpaynum;//本次结算的所有订单的消费
+                    /*获取所有的订单编号和购买数量*/
+                    productpis[i]=data[i].pid;//获取所有的商品编号
+                    productsnum[i]=data[i].userpaynum;//获取购买数量
+                    carids[i]=data[i].carid;
+                    console.log("选中的购物车编号carids:"+i+": "+carids[i])
+                    productcheck.push(1);//购物车选中为1
+                    console.log("获取到的数据：")
+                    console.log(data[i].pprice);
+                    console.log("购买数量"+data[i].userpaynum);
+                    console.log("productsnum"+productsnum[i]);
+                }
+                //将pids转换为一个字符串（后端直接接受数组，这里暂时不需要转字符串）
+                // productpis=productpis.join(",");
+                $.ajax({
+                    /*获得用户所有的金额*/
+                    url:"/getUserByUno",
+                    //type:post,
+                    contentType:"application/json;charset=utf-8",
+                    dataType:"json",
+                    /*判断金额是否充足*/
+                    success:function (user) {
+                        console.log(user);
+                        /*金额不足*/
+                        if (parseFloat(user.uMoney)>parseFloat(money)){
+                            layer.alert("很抱歉，您目前的余额不足");
+                            return false;
+                        }
+                        /*金额充足*/
+                        else {
+                            /*判断有没有收货地址*/
+                            $.ajax({
+                                url:"/getUserAddressByuNo",
+                                data:{"uno":user.uno},
+                                success:function (address) {
+                                    /*没有收货地址 为checkAddress框添加信息并显示*/
+                                    if (address==""){
+                                        var html="<div style='margin-left: 100px; margin-top: 20px'>" +
+                                            "<h1 style='font-size: 18px; margin-left: 6%'>目前您还未添加收获地址!</h1>" +
+                                            "</div>";
+                                        html+="<br/><br/><i class=\"layui-icon layui-icon-about\" style='margin-left: 35%;font-size: 100px;'></i><br/><br/><br/>"
+                                        html+="<button class='layui-btn' style='width: 120px; height: 30px; margin-left: 33%' onclick='addAddress()'>添加收货地址</button>";
+                                        $("#checkAddress").html(html);
+                                        layer.open({
+                                            title:"收货地址",
+                                            type:1,
+                                            content:$("#address"),
+                                            area:['500px','500px']
+                                        });
+                                    }
+                                    /*有收货地址 为checkAddress框添加信息并显示*/
+                                    else {
+                                        var html="";
+                                        console.log(address);
+                                        /*将地址信息添加到checkAddress框中*/
+                                        for (let i=0;i<address.length;i++){
+                                            var ureceivingPhone=address[i].ureceivingPhone;
+                                            var uAddress=address[i].uaddress;
+                                            var consign=address[i].uconsignee;
+                                            var addressAll=uAddress+","+consign+","+ureceivingPhone;
+                                            html+="<div style='margin-left: 40px; margin-top: 20px; font-size: 13px;'>" +
+                                                "<input  style='font-size: 16px;' type='radio' checked name='addressInfo' value=" + addressAll + ">" +
+                                                "地址:"+uAddress+"&nbsp;&nbsp;/&nbsp;&nbsp;收货人:" +consign+"&nbsp;&nbsp;/&nbsp;&nbsp;联系电话:"+ureceivingPhone+
+                                                "</div>"
+                                        }
+                                        /*添加确认按钮*/
+                                        html+="<div style='margin-left: 140px; margin-top: 20px;'>" +
+                                            "<input class='layui-btn' type='button' value='确定' onclick='payment()'>" +
+                                            "</div>";
+                                        $("#checkAddress").html(html);
+                                        /*打开id为address的div*/
+                                        layer.open({
+                                            title:"选择地址",
+                                            type:1,
+                                            content:$("#address"),
+                                            //btnAlign:'c',
+                                            area:["500px","500px"],
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    }
+                })
+                console.log(money)
+            }
+
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    })
+</script>
+
+<script>
+
+</script>
+
+</body>
+</html>

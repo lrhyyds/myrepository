@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nb.yyds220118.dao.IAdminNoticeDao">
+    <!--查询对应审核状态的公告-->
+      <select id="getnoticeisbystatus" resultType="notice">
+          select * from notice where nostatus=#{nostatus}
+      </select>
+    <!--修改审核状态-->
+    <update id="updatenoticeBynoid" >
+        update notice set nostatus=#{nostatus} where noid=#{noId}
+    </update>
+    <!--根据留言id删除公告-->
+    <delete id="delnoticeBynoid">
+        delete from notice where noid=#{noid}
+    </delete>
+    <!--批量删除公告-->
+    <delete id="delbatchnotice">
+        delete  from notice where
+        <foreach collection="list" item="n" separator="or" >
+            noid=#{n}
+        </foreach>
+    </delete>
+</mapper>

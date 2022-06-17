@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nb.yyds220118.dao.IAdminLogisticsDao">
+    <!--增加物流信息-->
+    <insert id="addLogistics">
+        insert into logistics values (#{loginum},#{loginame},#{logdate},#{oId})
+    </insert>
+
+    <!--查询所有物流信息关联查询收货人-->
+    <resultMap id="getallonamemap" type="logistics">
+        <result property="oId" column="oid"></result>
+        <association property="oName" column="oid" select="getonameByoid"></association>
+    </resultMap>
+    <select id="getAllLogis" resultMap="getallonamemap">
+        select * from logistics
+    </select>
+
+    <!-- 根据订单编号关联查询物流信息-->
+    <resultMap id="getonamemap" type="logistics">
+        <association property="oName" column="oid" select="getonameByoid"></association>
+    </resultMap>
+    <select id="getlogInfo" resultMap="getonamemap">
+        select  * from logistics where oid=#{oid}
+    </select>
+    <select id="getonameByoid"  resultType="String">
+        select oname from orders where oid=#{oId}
+    </select>
+    <!---->
+</mapper>

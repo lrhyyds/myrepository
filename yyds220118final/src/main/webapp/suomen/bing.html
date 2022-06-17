@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 引入 ECharts 文件 -->
+
+    <title>六个月内销量饼图</title>
+    <script src="js/echarts.common.min.js"></script>
+    <script src="../js/jquery3.3.1.min.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../layui/layui.js"></script>
+    <!--<script src="../js/vue3.js"></script>-->
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="../js/echarts.common.min.js"></script>
+</head>
+<body>
+<div id="main" style="width:600px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    $.post("/getsixMonth", function(datas) {
+        //alert(datas);
+        // console.log(datas);
+        // var data= $.parseJSON(datas);    //将传递过来的json字符串转化为对象
+        //alert(data);
+        // console.log(data);
+        var servicedata=[];
+        for(var i=0;i<datas.name.length;i++) {
+            var obj = new Object();
+            obj.name = datas.name[i];
+            obj.value = datas.data[i];
+            servicedata[i] = obj;
+        }
+        // $.post('/getfourWeek', function (data) {
+        //     alert(data)
+        myChart.setOption({
+            //标题
+            title : {
+                text: '近六月销售额',
+                subtext: '饼图',
+                x:'center'
+            },
+            //饼图工具
+            tooltip : {
+                trigger: 'item',
+                formatter: "{b} <br/>{c}元 <br/> 占比{d} %"      //a 系列名称，b 数据项名称，c 数值，d 百分比
+            },
+            //图例
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:datas.name
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {
+                        show: true,
+                        type: ['pie', 'funnel'],
+                        option: {
+                            funnel: {
+                                x: '50%',
+                                width: '100%',
+                                funnelAlign: 'left',
+                                max: 1548
+                            }
+                        }
+                    },
+                    // lineChart : {show:true},
+                    // barChart:{show:true},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            series : [
+                {
+                    name: '访问来源',
+                    type: 'pie',    // 设置图表类型为饼图
+                    radius: '55%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+                    data:servicedata
+                }
+            ]
+        })
+    }, 'json')
+</script>
+</body>
+</html>

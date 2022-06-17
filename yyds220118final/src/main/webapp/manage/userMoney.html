@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="../layui/layui.js"></script>
+    <script src="../layui/layui.all.js"></script>
+    <script src="../js/jquery3.3.1.min.js"></script>
+    <script src="../js/vue3.js"></script>
+
+</head>
+<style>
+    #contaniner{
+        width: 100%;
+        height: 1000px;
+        background-color: #FFFFFF;
+    }
+    #yuer{
+        width: 400px;
+        height: 100px;
+        margin: 0 auto;
+        line-height: 100px;
+    }
+</style>
+<body>
+<div id="contaniner">
+
+    <div id="yuer">
+        <h1>当前余额:{{umoney}}</h1>
+    </div>
+    <div id="editPwdDiv">
+        <form class="layui-form"  id="usersform">
+            <div class="layui-form-item">
+                <label class="layui-form-label">充值金额</label>
+                <div class="layui-input-inline">
+                    <input type="number" min=1 step=1 name="uMoney" id="money" required lay-verify="required" placeholder="请输入信息" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button  class="layui-btn layui-btn-primary layui-border-blue" lay-submit lay-filter="formDemo"type="button"  id="pwdBtn" >立即充值</button>
+                </div>
+            </div>
+            <script>
+
+                layui.use('form', function(){
+                    var form = layui.form;
+                    form.render('radio');
+                    //监听提交
+                    form.on('submit(formDemo)', function(data){
+                        $.ajax({
+                            url:"/updateUserInfoMoney",
+                            data:$("#usersform").serialize(),
+                            success:function (res){
+                                if (1==res){
+                                    location.reload();//刷新当前页面
+                                }else {
+                                    layer.msg("修改失败")
+                                }
+                            }
+                        })
+                        return false;
+                    });
+                });
+            </script>
+
+        </form>
+
+    </div>
+</div>
+
+
+<script>
+    const app={
+        data(){
+            return {
+                umoney:null
+            }
+        },
+        methods: {
+
+        },
+        mounted:function (){
+            var _self=this;//_self表示app
+            $.post("/getUserByNo", function(res){
+                _self.umoney = res.umoney;
+            });
+        }
+    }
+    const vue = Vue.createApp(app);
+    vue.mount("#contaniner")
+</script>
+</body>
+</html>

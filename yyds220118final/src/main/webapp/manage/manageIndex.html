@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../lib/layui/layui.js" charset="utf-8"></script>
+  <!--<script src="./layui/layui.js"></script>-->
+  <script src='../js/libs/jquery.js'></script>
+  <script src="../js/vue3.js"></script>
+  <script src="../js/jquery3.3.1.min.js"></script>
+  <script src="../js/jquery.min.js"></script>
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/index.css">
+
+</head>
+<style>
+  *{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+  }
+  #warp{
+    width: 100%;
+    height: 1600px;
+    background: #f5f5f5;
+  }
+  #header{
+    width: 100%;
+    height: 100px;
+    background: #FFFFFF;
+  }
+  #headContaniner{
+    width: 1400px;
+    height: 100px;
+    margin: 0 auto;
+  }
+  #contaniner{
+    width: 1400px;
+    height: 1200px;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  #homeLeft{
+    width: 200px;
+    height: 1000px;
+    float: left;
+    background: #fff;
+  }
+  #homeRight{
+    width: 1100px;
+    height: 1000px;
+    float: left;
+    margin-left: 20px;
+  }
+  #ula{
+    width: 160px;
+    margin-top: 80px;
+
+  }
+  #ula li{
+    margin: 0 20px;
+    width: 200px;
+    height: 50px;
+
+  }
+  #ula li a{
+    line-height: 50px;
+    text-align: left;
+    display: block;
+    font-family: 华文宋体;
+    font-size: 16px;
+    font-weight: bold;
+    color: #757575;
+  }
+  #ula li a:hover{
+    color: #01AAED;
+  }
+</style>
+<body>
+<div id="warp">
+  <div id="contaniner">
+    <div id="homeLeft">
+      <ul id="ula">
+        <li><a href="userHome.html" target="main">我的个人中心</a></li>
+        <li><a href="userMoney.html" target="main">充值</a></li>
+        <li><a href="userPwd.html" target="main">修改密码</a></li>
+        <li><a href="userAddr.html" target="main">地址管理</a></li>
+        <li><a href="userLiuyan.html" target="main">留言</a></li>
+        <li><a href="shopping.html" target="main">我的购物车</a> </li>
+        <li><a href="userorder-list.html" target="main">我的订单</a> </li>
+      </ul>
+    </div>
+    <div id="homeRight">
+      <iframe name="main" src="userHome.html" frameborder="0" width="1200px" height="1200px">
+      </iframe>
+    </div>
+  </div>
+
+</div>
+
+<!--退出登录-->
+<script>
+  layui.use(['form', 'layer','jquery'],
+          function() {
+            $ = layui.jquery;
+            var form = layui.form,
+                    layer =layui.layer;});
+  function out() {
+    layer.confirm('你真的要离我而去吗?', {
+      btn: ['残忍离去', '留下'] //按钮
+    }, function () {
+      console.log("确认离去");
+      sessionStorage.clear();
+      $.post({
+        url: '/outlogin',
+        success: function (res) {
+          console.log("接收到返回参数"+res);
+          if (res=1) {
+            layer.msg("大爷，下次再来玩啊",{time: 1000, shade: 0.4},function () {
+              location.href="/index.html";
+            });
+          }
+        }
+      });
+    },function () {
+      layer.msg('感谢您留了下来');
+    });
+  };
+  function gotoback(){
+    console.log("进入gotoBack方法");
+    $.ajax({
+      url:'/gotoBack',
+      success:function (res){
+        location.href=res;
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
